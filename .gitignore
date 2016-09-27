@@ -1,0 +1,7 @@
+
+
+#IGNORE NODE 
+node_modules/
+
+#IGNORE VS CODE SETTINGS 
+.vscode/

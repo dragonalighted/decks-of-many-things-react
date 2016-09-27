@@ -1,0 +1,33 @@
+{
+  "name": "decks-of-many-things-react",
+  "version": "1.0.0",
+  "description": "Creates an RPG card deck",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "test",
+    "build" : "npm run browserify",
+    "browserify" : "browserify src/index.js -o build/bundle.js",
+    "watch" : "watchify src/index.js -o build/bundle.js -v"
+  },
+  "keywords": [
+    "rpg",
+    "deck",
+    "cards"
+  ],
+  "author": "Christopher Reeber",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dragonalighted/decks-of-many-things-react.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dragonalighted/decks-of-many-things-react/issues"
+  },
+  "dependencies": {
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  }
+}
