@@ -1,0 +1,38 @@
+
+.deck {
+    display:inline-block;
+    border:1px solid black; 
+    padding:10px; 
+    background-color:oldlace; 
+    color:black;     
+    margin:0; 
+}
+
+h1.deckName, h2.deckName, h3.deckName,
+h4.deckName,h5.deckName, h6.deckName{
+    text-align: center;
+    text-transform: capitalize;
+}
+
+
+.deck-list{ 
+    margin:0;
+    padding:15px 8px 8px 10px;
+    list-style-type: none; 
+}
+
+.deck-list li {
+    color: navy; 
+    font-size:14pt;
+    font-weight: bold; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left:10px;    
+}
+
+.deck-list li:hover {
+    color: whitesmoke; 
+    font-size:14pt;
+    font-weight: bolder; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left:10px;         
+}

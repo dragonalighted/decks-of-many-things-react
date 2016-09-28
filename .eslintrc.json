@@ -1,0 +1,16 @@
+{
+    "extends": "eslint:recommended",
+    "installedESLint": true,
+    "plugins" : ["react"], 
+    "rules" : {
+        "linebreak-style": ["warn", "unix"],
+        "no-undef": "warn",
+        "no-unused-vars": "warn"
+    },
+    "parserOptions": {
+        "ecmaVersion":6,
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    }
+}
