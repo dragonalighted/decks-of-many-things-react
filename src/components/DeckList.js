@@ -1,8 +1,16 @@
 
 
 var React = require('react'); 
+var DeckListItem = require('./DeckListItem') 
+
 
 module.exports = React.createClass({
+    getInitialState : function(){
+        return { 
+            collapsed: false,
+            selectedDeck: "1"
+        }; 
+    },
     render : function(){
         return(
             <div >                
@@ -12,17 +20,17 @@ module.exports = React.createClass({
                     Add Deck
                 </button>
                 <h3 className="margin-0 padding-10">Decks</h3>
-                <ul className="deck-list">
+                <ul className="deck-list greedy">
                 { 
                     this.props.decks.map(function(deck){
-                        return( 
-                            <li>
-                                <span onClick={this._onDeckSelected} >{deck.name}</span>
-                                <button onClick={this._onDeckDeleteClicked}
-                                    className="btn btn-sm btn-error">
-                                    <span className="glyphicon glyphicon-trash"></span>
-                                </button>
-                            </li>);    
+                        return(
+                            <DeckListItem deck={deck}
+                                onDeleteDeck={this._onDeckDeleteClicked}
+                                onAddCard={this._onAddCardClicked}
+                                onSelected={this._onDeckSelected}
+                                selected={(this.state.selectedDeck == deck.key)}
+                            /> 
+                        );      
                     }, this)
                 }
                 </ul>
@@ -36,8 +44,13 @@ module.exports = React.createClass({
     _onAddDeckClicked: function(){
         alert('Add Deck Clicked!');
     },
-    __onDeckDeleteClicked: function(){
+    _onDeckDeleteClicked: function(){
         alert('Delete Deck Clicked!');
+    },
+    _onAddCardClicked: function() {
+        alert('Add Card Clicked!');
     }
     
+
 });
+

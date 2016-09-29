@@ -20755,48 +20755,46 @@ module.exports = validateDOMNesting;
 module.exports = require('./lib/React');
 
 },{"./lib/React":54}],172:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var React = require('react');
+var DeckListItem = require('./DeckListItem');
 
 module.exports = React.createClass({
-    displayName: "exports",
+    displayName: 'exports',
 
+    getInitialState: function getInitialState() {
+        return {
+            collapsed: false,
+            selectedDeck: "1"
+        };
+    },
     render: function render() {
         return React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-                "button",
+                'button',
                 {
-                    className: "btn btn-md btn-success pull-right margin-right-10 margin-top-10",
+                    className: 'btn btn-md btn-success pull-right margin-right-10 margin-top-10',
                     onClick: this._onAddDeckClicked },
-                "Add Deck"
+                'Add Deck'
             ),
             React.createElement(
-                "h3",
-                { className: "margin-0 padding-10" },
-                "Decks"
+                'h3',
+                { className: 'margin-0 padding-10' },
+                'Decks'
             ),
             React.createElement(
-                "ul",
-                { className: "deck-list" },
+                'ul',
+                { className: 'deck-list greedy' },
                 this.props.decks.map(function (deck) {
-                    return React.createElement(
-                        "li",
-                        null,
-                        React.createElement(
-                            "span",
-                            { onClick: this._onDeckSelected },
-                            deck.name
-                        ),
-                        React.createElement(
-                            "button",
-                            { onClick: this._onDeckDeleteClicked,
-                                className: "btn btn-sm btn-error" },
-                            React.createElement("span", { className: "glyphicon glyphicon-trash" })
-                        )
-                    );
+                    return React.createElement(DeckListItem, { deck: deck,
+                        onDeleteDeck: this._onDeckDeleteClicked,
+                        onAddCard: this._onAddCardClicked,
+                        onSelected: this._onDeckSelected,
+                        selected: this.state.selectedDeck == deck.key
+                    });
                 }, this)
             )
         );
@@ -20808,13 +20806,53 @@ module.exports = React.createClass({
     _onAddDeckClicked: function _onAddDeckClicked() {
         alert('Add Deck Clicked!');
     },
-    __onDeckDeleteClicked: function __onDeckDeleteClicked() {
+    _onDeckDeleteClicked: function _onDeckDeleteClicked() {
         alert('Delete Deck Clicked!');
+    },
+    _onAddCardClicked: function _onAddCardClicked() {
+        alert('Add Card Clicked!');
     }
 
 });
 
-},{"react":171}],173:[function(require,module,exports){
+},{"./DeckListItem":173,"react":171}],173:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+module.exports = React.createClass({
+    displayName: 'exports',
+
+    render: function render() {
+        return React.createElement(
+            'li',
+            { className: this.props.selected ? 'selected' : '' },
+            React.createElement(
+                'span',
+                { onClick: this.props.onSelected,
+                    title: 'Select this deck',
+                    className: 'ctrl padding-right-10' },
+                this.props.deck.name,
+                ' (',
+                (this.props.deck.cards || []).length,
+                ')'
+            ),
+            React.createElement(
+                'div',
+                { className: 'inline-block pull-right padding-right-10' },
+                React.createElement('span', { className: 'ctrl glyphicon glyphicon-plus margin-right-10',
+                    title: 'Add New Card',
+                    onClick: this.props.onAddCard }),
+                React.createElement('span', { className: 'ctrl glyphicon glyphicon-trash',
+                    title: 'Delete Deck',
+                    onClick: this.props.onDeleteDeck })
+            )
+        );
+    }
+
+});
+
+},{"react":171}],174:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -20847,7 +20885,42 @@ module.exports = React.createClass({
     }
 });
 
-},{"./DeckList":172,"react":171}],174:[function(require,module,exports){
+},{"./DeckList":172,"react":171}],175:[function(require,module,exports){
+"use strict";
+
+var defaultObj = {
+    decks: [{
+        key: "1",
+        name: "Example Deck",
+        tags: ["example", "demo"],
+        created: new Date(),
+        modified: null,
+        cards: [{
+            key: "1",
+            name: "Burning Hands"
+        }, {
+            key: "2",
+            name: "Shield"
+        }]
+    }, {
+        key: "2",
+        name: "Example Deck 2",
+        tags: ["example", "Demo"],
+        created: new Date(),
+        modified: null,
+        cards: [{
+            key: "2-1",
+            name: "Burning Hands"
+        }, {
+            key: "2-2",
+            name: "Shield"
+        }]
+    }]
+};
+
+module.exports = defaultObj;
+
+},{}],176:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -20858,9 +20931,9 @@ var WorkSpace = require('./components/WorkSpace');
 
 // constants
 var guid = '9e39253c-b1f8-4d0a-822f-6a386757ba43';
+var defaultObj = require('./defaultObj.js');
 
 function _loadApplicationObject() {
-    var defaultObj = { decks: [{ name: "Example Deck", tags: ["example", "demo"], created: new Date(), modified: null }] };
     var appObj = localStorage[guid];
 
     if (!appObj) appObj = Object.assign({}, defaultObj);
@@ -20872,4 +20945,4 @@ var appObj = _loadApplicationObject();
 
 ReactDOM.render(React.createElement(WorkSpace, { appObj: appObj }), document.getElementById('example'));
 
-},{"./components/WorkSpace":173,"react":171,"react-dom":28}]},{},[174]);
+},{"./components/WorkSpace":174,"./defaultObj.js":175,"react":171,"react-dom":28}]},{},[176]);

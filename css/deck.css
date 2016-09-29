@@ -26,13 +26,22 @@ h4.deckName,h5.deckName, h6.deckName{
     font-size:14pt;
     font-weight: bold; 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-left:10px;    
+    margin-left:5px;
+    padding:10px;    
 }
 
-.deck-list li:hover {
+.deck-list li span:hover {
     color: whitesmoke; 
     font-size:14pt;
-    font-weight: bolder; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin-left:10px;         
+
 }
+
+.deck-list span.ctrl:hover {
+    cursor:pointer;
+}
+
+.deck-list li.selected {
+    background-color: lightskyblue;
+    border-radius:5px;
+    border:1px solid navajowhite;
+} 
