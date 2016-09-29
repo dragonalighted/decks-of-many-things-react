@@ -1,16 +1,18 @@
-var React = require('react');
-var ReactDOM = require('react-dom'); 
+import React from 'react';
+import ReactDOM from 'react-dom'; 
 
 // components
-var WorkSpace = require('./components/WorkSpace');
+import WorkSpace from './components/WorkSpace';
 
 // constants
-const guid = '9e39253c-b1f8-4d0a-822f-6a386757ba43';
-var defaultObj = require('./defaultObj.js');
+import {appGuid} from './objects/constants.js';
+import appObj from './objects/appObj'
+
+
 
 
 function _loadApplicationObject(){
-    let appObj = localStorage[guid];
+    let obj = appObj.loadAppObj(appGuid, {defaultIfNone:true}); 
 
     if(!appObj) 
         appObj = Object.assign({}, defaultObj) ;

@@ -1,10 +1,15 @@
-var React = require('react'); 
+import React from 'react'; 
 
-module.exports = React.createClass({
-    render :function(){
+
+export default class DeskListItem extends React.Component {
+    constructor(props){
+        super(props); 
+        this._onListItemClicked = this._onListItemClicked.bind(this);
+    }
+    render(){
         return (
-            <li  className={this.props.selected ? 'selected' : ''} >
-                <span onClick={this.props.onSelected} 
+            <li  className={this.props.deck.selected ? 'selected' : ''} >
+                <span onClick={this._onListItemClicked} 
                     title="Select this deck"
                     className="ctrl padding-right-10">
                     {this.props.deck.name} ({ (this.props.deck.cards || [] ).length})
@@ -17,8 +22,12 @@ module.exports = React.createClass({
                         title="Delete Deck"
                         onClick={this.props.onDeleteDeck}></span>
                 </div>
-            </li>);
+            </li>
+        );
+    } 
+
+    _onListItemClicked(e){    
+        e.preventDefault();   
+        this.props.onSelected(this.props.deck.key); 
     }
-
-
-});
+}

@@ -1,11 +1,15 @@
-var React = require('react'); 
-var DeckList = require('./DeckList');
+import React from 'react'; 
+import DeckList from './DeckList';
 
 
-module.exports = React.createClass({
-    render : function(){
+export default class WorkSpace extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = { appObj:  }
+        this._deckSelected = this._deckSelected.bind(this);
+    }
+    render(){
         let appObj = this.props.appObj || {}; 
-
         return(
             <div className="work-space">
 
@@ -13,9 +17,15 @@ module.exports = React.createClass({
                     <h1>Decks of Many Things</h1>
                 </div>
                 <div className="ws-left-pane">
-                    <DeckList decks={appObj.decks} />
+                    <DeckList decks={appObj.decks} onDeckSelected={this._deckSelected} />
                 </div>
             </div>
         );
     }
-});
+
+    _deckSelected(deckId){
+        appObj.
+        alert('deck selected');
+    }
+} 
+

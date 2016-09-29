@@ -1,17 +1,23 @@
+import React from 'react'; 
+import DeckListItem from './DeckListItem';  
 
 
-var React = require('react'); 
-var DeckListItem = require('./DeckListItem') 
 
+export default class DeckList extends React.Component {
 
-module.exports = React.createClass({
-    getInitialState : function(){
-        return { 
-            collapsed: false,
-            selectedDeck: "1"
+    constructor(props){
+        super(props);
+        this.state = { 
+            collapsed: false
         }; 
-    },
-    render : function(){
+
+        this._onDeckSelected = this._onDeckSelected.bind(this);
+        this._onAddDeckClicked = this._onAddDeckClicked.bind(this);
+        this._onDeckDeleteClicked = this._onDeckDeleteClicked.bind(this);
+        this._onAddCardClicked = this._onAddCardClicked.bind(this); 
+    }
+
+    render(){
         return(
             <div >                
                 <button 
@@ -28,29 +34,30 @@ module.exports = React.createClass({
                                 onDeleteDeck={this._onDeckDeleteClicked}
                                 onAddCard={this._onAddCardClicked}
                                 onSelected={this._onDeckSelected}
-                                selected={(this.state.selectedDeck == deck.key)}
                             /> 
                         );      
                     }, this)
                 }
                 </ul>
             </div>
-        );
-    },
-    _onDeckSelected: function(){
-        alert('Deck Selected');
-    },
+        );        
+    }
 
-    _onAddDeckClicked: function(){
+    _onDeckSelected(deckId){
+        this.props.onDeckSelected(deckId) 
+    }
+
+    _onAddDeckClicked(event){
         alert('Add Deck Clicked!');
-    },
-    _onDeckDeleteClicked: function(){
+    }
+    _onDeckDeleteClicked(event){
         alert('Delete Deck Clicked!');
-    },
-    _onAddCardClicked: function() {
+    }
+    _onAddCardClicked(event){
         alert('Add Card Clicked!');
     }
-    
 
-});
+}
+
+
 
