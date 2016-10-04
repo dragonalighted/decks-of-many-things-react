@@ -1,6 +1,6 @@
 
-import rpDeck from './objects/rpDeck'; 
-import rpCard from './objects/rpCard'; 
+import rpDeck from './rpDeck'; 
+import rpCard from './rpCard'; 
 
 const guid = '9e39253c-b1f8-4d0a-822f-6a386757ba43';
 const defaultObj = {     

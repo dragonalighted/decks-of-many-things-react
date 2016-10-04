@@ -1,9 +1,9 @@
 
 import rpDeck from './rpDeck'; 
 import rpCard from './rpCard';
+import {guid, defaultObj} from './defaultObj';
 
-
-export default class appObj{
+export default class AppObject{
     constructor({decks}){
         this.decks = decks || []; 
     }
@@ -16,13 +16,10 @@ export default class appObj{
         return null; 
     }
 
-    static loadAppObj(appGuid {defaultIfNone}){
-        let appJson = localStorage[appGuid];
+    static loadAppObject(){
+        let appJson = localStorage[guid];
+        let obj = JSON.parse((!appJson ? defaultObj : appJson));  
 
-        if(!appJson) 
-            appObj = Object.assign({}, ne defaultObj) ;
-  
-    return appObj; 
-        return appJson; 
+        return Object.assign({}, obj) ;  
     }
 }

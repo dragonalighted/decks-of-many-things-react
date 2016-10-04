@@ -5,7 +5,7 @@ import DeckList from './DeckList';
 export default class WorkSpace extends React.Component {
     constructor(props){
         super(props);
-        this.state = { appObj:  }
+        this.state = { appObj: props.appObj }
         this._deckSelected = this._deckSelected.bind(this);
     }
     render(){
