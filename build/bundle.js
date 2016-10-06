@@ -20820,7 +20820,9 @@ var DeckList = function (_React$Component) {
                     'ul',
                     { className: 'deck-list greedy' },
                     this.props.decks.map(function (deck) {
-                        return _react2.default.createElement(_DeckListItem2.default, { deck: deck,
+                        return _react2.default.createElement(_DeckListItem2.default, {
+                            key: deck.id,
+                            deck: deck,
                             onDeleteDeck: this._onDeckDeleteClicked,
                             onAddCard: this._onAddCardClicked,
                             onSelected: this._onDeckSelected
@@ -21025,7 +21027,11 @@ var _AppObject2 = _interopRequireDefault(_AppObject);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // components
-_reactDom2.default.render(_react2.default.createElement(_WorkSpace2.default, { appObj: _AppObject2.default.loadAppObject() }), document.getElementById('example'));
+try {
+    _reactDom2.default.render(_react2.default.createElement(_WorkSpace2.default, { appObj: _AppObject2.default.loadAppObject() }), document.getElementById('example'));
+} catch (err) {
+    _reactDom2.default.render(_react2.default.createElement(_WorkSpace2.default, { appObj: _AppObject2.default.loadAppObject() }), document.getElementById('example'));
+}
 
 // constants
 
@@ -21095,7 +21101,7 @@ var AppObject = function () {
         key: 'loadAppObject',
         value: function loadAppObject() {
             var appJson = localStorage[_defaultObj.guid];
-            var obj = JSON.parse(!appJson ? _defaultObj.defaultObj : appJson);
+            var obj = !appJson ? _defaultObj.defaultObj : JSON.parse(appJson);
 
             return Object.assign({}, obj);
         }
@@ -21291,6 +21297,11 @@ var rpDeck = function () {
                     }
                 }
             }
+        }
+    }, {
+        key: "id",
+        get: function get() {
+            return this._id;
         }
     }, {
         key: "name",

@@ -30,7 +30,9 @@ export default class DeckList extends React.Component {
                 { 
                     this.props.decks.map(function(deck){
                         return(
-                            <DeckListItem deck={deck}
+                            <DeckListItem 
+                                key={deck.id}
+                                deck={deck}
                                 onDeleteDeck={this._onDeckDeleteClicked}
                                 onAddCard={this._onAddCardClicked}
                                 onSelected={this._onDeckSelected}

@@ -1,8 +1,8 @@
-var React = require('react'); 
-var Card = require('./Card');
+import React from 'react'; 
+import Card from './Card';
 
-module.exports = React.createClass({
-    render : function(){
+export default class Deck extends React.Component {
+    render(){
         return(
         <div className="deck">
             <h3 className="deckName">{(this.props.deckName || "Un-Named deck")}</h3>
@@ -11,4 +11,4 @@ module.exports = React.createClass({
         </div>);
     }
 
-});
+}

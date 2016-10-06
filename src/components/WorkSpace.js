@@ -9,7 +9,7 @@ export default class WorkSpace extends React.Component {
         this._deckSelected = this._deckSelected.bind(this);
     }
     render(){
-        let appObj = this.props.appObj || {}; 
+        let appObj = this.props.appObj || {};
         return(
             <div className="work-space">
 

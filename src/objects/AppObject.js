@@ -18,7 +18,7 @@ export default class AppObject{
 
     static loadAppObject(){
         let appJson = localStorage[guid];
-        let obj = JSON.parse((!appJson ? defaultObj : appJson));  
+        let obj = !appJson ? defaultObj : JSON.parse(appJson);  
 
         return Object.assign({}, obj) ;  
     }
