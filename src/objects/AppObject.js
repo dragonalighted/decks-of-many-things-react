@@ -22,4 +22,8 @@ export default class AppObject{
 
         return Object.assign({}, obj) ;  
     }
+
+    addDeck(newDeck) {
+        
+    }
 }

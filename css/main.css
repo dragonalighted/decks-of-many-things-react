@@ -64,3 +64,25 @@ body {
     position:relatve;
     width:100%;
 }
+
+
+button
+, input[type="button"]
+, input[type="submit"]
+{
+    margin: 5 5;
+}
+
+
+.modal-container {
+    padding: 2em;
+    text-align: center;
+    margin:0;
+}
+
+.modal-container h2 {
+    margin:0 15 25 15;
+    padding: 0 0 15 0;
+    border-bottom:1px solid navy;
+}
+
