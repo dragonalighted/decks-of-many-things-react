@@ -1,12 +1,16 @@
 import React from 'react'; 
 import DeckList from './DeckList';
-
+import rpDeck from '../objects/rpDeck';
+import AppObject from '../objects/AppObject';
 
 export default class WorkSpace extends React.Component {
     constructor(props){
         super(props);
-        this.state = { appObj: props.appObj }
+        this.state = { 
+            appObj :props.appObj
+            }
         this._deckSelected = this._deckSelected.bind(this);
+        this._decksChanged = this._decksChanged.bind(this);
     }
     render(){
         let appObj = this.props.appObj || {};
@@ -18,15 +22,20 @@ export default class WorkSpace extends React.Component {
                 </div>
                 <div className="ws-left-pane">
                     <DeckList decks={appObj.decks} 
-                        onDeckSelected={this._deckSelected} />
+                        onDeckSelected={this._deckSelected}
+                        onDecksChanged={this._decksChanged} />
                 </div>
             </div>
         );
     }
+    _decksChanged(){
+        AppObject.saveAppObject(this.state.appObj);       
+        this.setState({appObj : this.state.appObj});
+    }
 
     _deckSelected(deckId){
-        appObj.
-        alert('deck selected');
+        //rpDeck.selectDeck(this.state.appObj.decks, deckId);
+        this.setState({appObj : this.state.appObj});
     }
 } 
 

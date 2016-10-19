@@ -8,14 +8,14 @@ import WorkSpace from './components/WorkSpace';
 import AppObject from './objects/AppObject'
 
 try {
-ReactDOM.render(
-    <WorkSpace appObj={AppObject.loadAppObject()} />,
-    document.getElementById('example')
-);
+    ReactDOM.render(
+        <WorkSpace appObj={AppObject.loadAppObject()} />,
+        document.getElementById('example')
+    );
 }
 catch(err) {
     ReactDOM.render(
-        <WorkSpace appObj={AppObject.loadAppObject()} />,
+        (<div>{err.toString()}</div>),
         document.getElementById('example')
     );    
 }

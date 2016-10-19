@@ -86,3 +86,10 @@ button
     border-bottom:1px solid navy;
 }
 
+.alert {
+    text-align: left;    
+}
+
+.alert ul {
+    list-style-type: none;
+}

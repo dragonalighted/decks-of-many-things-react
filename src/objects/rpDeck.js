@@ -5,16 +5,12 @@ import rpCard from './rpCard';
 
 export default class rpDeck {
     constructor(id = -1, {name, desc, selected, tags, cards} = {}){
-        let defaults = { name :"Un-Named Deck", desc : "", selected: false , tags : [], cards: []}; 
-        let options = {name, desc, selected, tags, cards}; 
-        let settings = Object.assign({}, defaults, options);
-
         this._id = id; 
-        this._name = settings.name; 
-        this._desc = settings.desc;
-        this._selected = settings.selected;  
-        this._tags = settings.tags; 
-        this._cards = settings.cards;
+        this.name = name; 
+        this.desc = desc;
+        this.selected = selected;   
+        this.tags = tags; 
+        this._cards = cards || [];
         this._created = new Date();
         this._modified = this.created;   
         this._normalizeCardIds();      
@@ -32,13 +28,26 @@ export default class rpDeck {
     set selected(value = false) { this._selected = value;}
 
     get tags() { return this._tags;}
-    set tags(value = []) { this._tags = value; }
+    set tags(value = []) { 
+        this._tags = value;
+        this.cleanTags();
+    }
     
+
     get cards() {return this._cards; }
 
     get modified() {return this._modified;}
     get created() {return this._created;}
-      
+
+    cleanTags(val = ""){
+       for (var i = 0; i <this._tags.length; i++) {
+            if (this._tags[i].trim() === val) {         
+                this._tags.splice(i, 1);
+                i--;
+            }
+        }
+    }  
+
     addCard(card){
         let max = 0; 
         for(let value of this._cards){
@@ -70,6 +79,64 @@ export default class rpDeck {
         for(let value of this._cards){
             value._id = id; 
             id++;
+        }
+    }
+
+    static removeDeck(decks, deckId){
+        let l = decks.length; 
+        for(let i = 0; i < l; i++){
+            if(decks[i].id === deckId) {
+                decks.splice(i,1);
+                return decks; 
+            }
+        }
+    }
+
+    static addDeck(decks, newDeck) {
+        newDeck._id = rpDeck._getNextId(decks); 
+        decks.push(newDeck); 
+        return decks;         
+    }
+    static _getNextId(decks){
+        let nextId = 0; 
+        for(let deck of decks){
+            if( deck.id > nextId )
+            { 
+                nextId = deck.id; 
+            } 
+        }
+        nextId++; 
+        return nextId; 
+    }
+
+    static selectDeck(decks, deckId, multiSelect = false) {        
+        for(let deck of decks)
+        {
+            if(deck.id === deckId){
+                deck.selected = true;
+            }
+            else if(!multiSelect) {
+                deck.selected = false; 
+            }
+        }
+    }
+
+
+    static loadDeck(jsDeckObj) {
+        let deck = Object.assign(new rpDeck(), jsDeckObj);
+
+        for(let ci = 0; ci < deck.cards.length; ci++){
+            deck._cards[ci] = rpCard.loadCard(deck._cards[ci]);
+        }
+        return deck;
+    }
+
+    static getDeck(decks, deckId){
+        for(let deck of decks)
+        {
+            if(deck.id === deckId){
+                return deck;
+            }
         }
     }
 }
