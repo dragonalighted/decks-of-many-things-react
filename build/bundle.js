@@ -21439,18 +21439,6 @@ var _DeckListItem = require('./DeckListItem');
 
 var _DeckListItem2 = _interopRequireDefault(_DeckListItem);
 
-var _OutlineModal = require('boron/OutlineModal');
-
-var _OutlineModal2 = _interopRequireDefault(_OutlineModal);
-
-var _NewDeck = require('./NewDeck');
-
-var _NewDeck2 = _interopRequireDefault(_NewDeck);
-
-var _rpDeck = require('../objects/rpDeck');
-
-var _rpDeck2 = _interopRequireDefault(_rpDeck);
-
 var _ConfirmationModal = require('./modals/ConfirmationModal');
 
 var _ConfirmationModal2 = _interopRequireDefault(_ConfirmationModal);
@@ -21458,6 +21446,10 @@ var _ConfirmationModal2 = _interopRequireDefault(_ConfirmationModal);
 var _DeckModal = require('./modals/DeckModal');
 
 var _DeckModal2 = _interopRequireDefault(_DeckModal);
+
+var _rpDeck = require('../objects/rpDeck');
+
+var _rpDeck2 = _interopRequireDefault(_rpDeck);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21526,27 +21518,15 @@ var DeckList = function (_React$Component) {
                         });
                     }, this)
                 ),
-                _react2.default.createElement(
-                    _OutlineModal2.default,
-                    { ref: function ref(_ref) {
-                            return _this2.NewDeckModal = _ref;
-                        } },
-                    _react2.default.createElement(_NewDeck2.default, {
-                        onSave: this._onSaveDeck,
-                        onCancel: function onCancel() {
-                            return _this2.NewDeckModal.hide();
-                        }
-                    })
-                ),
                 _react2.default.createElement(_DeckModal2.default, {
-                    ref: function ref(_ref2) {
-                        return _this2.newDeck = _ref2;
+                    ref: function ref(_ref) {
+                        return _this2.newDeck = _ref;
                     },
                     onSave: this._onSaveDeck }),
-                _react2.default.createElement(_ConfirmationModal2.default, { ref: function ref(_ref3) {
-                        return _this2.confirmation = _ref3;
+                _react2.default.createElement(_ConfirmationModal2.default, { ref: function ref(_ref2) {
+                        return _this2.confirmation = _ref2;
                     },
-                    key: '0',
+                    title: 'Delete Deck?',
                     action: 'Are you sure you want to delete this Deck',
                     onYes: this._deleteDeck
                 })
@@ -21569,7 +21549,6 @@ var DeckList = function (_React$Component) {
         value: function _onSaveDeck(deck) {
             if (deck.id <= 0) _rpDeck2.default.addDeck(this.props.decks, deck);
             this.props.onDecksChanged();
-            this.NewDeckModal.hide();
         }
     }, {
         key: '_onDeckDeleteClicked',
@@ -21595,7 +21574,7 @@ var DeckList = function (_React$Component) {
 
 exports.default = DeckList;
 
-},{"../objects/rpDeck":192,"./DeckListItem":183,"./NewDeck":184,"./modals/ConfirmationModal":186,"./modals/DeckModal":187,"boron/OutlineModal":2,"react":181}],183:[function(require,module,exports){
+},{"../objects/rpDeck":191,"./DeckListItem":183,"./modals/ConfirmationModal":185,"./modals/DeckModal":186,"react":181}],183:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21684,185 +21663,6 @@ var DeskListItem = function (_React$Component) {
 exports.default = DeskListItem;
 
 },{"react":181}],184:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var NewDeck = function (_React$Component) {
-    _inherits(NewDeck, _React$Component);
-
-    function NewDeck(props) {
-        _classCallCheck(this, NewDeck);
-
-        var _this = _possibleConstructorReturn(this, (NewDeck.__proto__ || Object.getPrototypeOf(NewDeck)).call(this, props));
-
-        _this.state = {
-            errors: [],
-            warnings: [],
-            info: []
-        };
-        _this._onCancelClicked = _this._onCancelClicked.bind(_this);
-        _this._onSaveClicked = _this._onSaveClicked.bind(_this);
-        return _this;
-    }
-
-    _createClass(NewDeck, [{
-        key: "render",
-        value: function render() {
-            var _this2 = this;
-
-            return _react2.default.createElement(
-                "div",
-                { className: "modal-container row" },
-                this._getErrors(),
-                _react2.default.createElement(
-                    "h2",
-                    null,
-                    "New Deck"
-                ),
-                _react2.default.createElement(
-                    "form",
-                    { className: "form-horizontal" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "form-group required" },
-                        _react2.default.createElement(
-                            "label",
-                            { htmlFor: "name", className: "control-label col-md-3" },
-                            " Name "
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-md-8" },
-                            _react2.default.createElement("input", { type: "text",
-                                className: "form-control col-md-6",
-                                name: "name",
-                                placeholder: "Deck Name",
-                                ref: function ref(input) {
-                                    return _this2._name = input;
-                                } })
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "form-group" },
-                        _react2.default.createElement(
-                            "label",
-                            { htmlFor: "desc", className: "control-label col-md-3" },
-                            "Description "
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-md-8" },
-                            _react2.default.createElement("textarea", {
-                                name: "desc",
-                                className: "form-control col-md-6",
-                                placeholder: "(Optional)",
-                                ref: function ref(input) {
-                                    return _this2._desc = input;
-                                } })
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "form-group" },
-                        _react2.default.createElement(
-                            "label",
-                            { htmlFor: "tags", className: "control-label col-md-3" },
-                            "Tags "
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-md-8" },
-                            _react2.default.createElement("input", { type: "text",
-                                className: "form-control",
-                                name: "tags",
-                                placeholder: "(Optional) separated by commas",
-                                ref: function ref(input) {
-                                    return _this2._tags = input;
-                                } })
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "pull-right", style: { marginRight: '2em', marginTop: '1em' } },
-                        _react2.default.createElement(
-                            "button",
-                            { type: "button", className: "btn btn-default", onClick: this._onCancelClicked },
-                            "Cancel"
-                        ),
-                        _react2.default.createElement(
-                            "button",
-                            { type: "submit", className: "btn btn-success", onClick: this._onSaveClicked },
-                            "Save"
-                        )
-                    )
-                )
-            );
-        }
-    }, {
-        key: "_getErrors",
-        value: function _getErrors() {
-            if (this.state.errors.length > 0) {
-                return _react2.default.createElement(
-                    "div",
-                    { className: "alert alert-danger" },
-                    _react2.default.createElement(
-                        "ul",
-                        null,
-                        this.state.errors.map(function (value, index) {
-                            return _react2.default.createElement(
-                                "li",
-                                null,
-                                value
-                            );
-                        })
-                    )
-                );
-            }
-        }
-    }, {
-        key: "_onCancelClicked",
-        value: function _onCancelClicked(event) {
-            event.preventDefault();
-            this.props.onCancel();
-        }
-    }, {
-        key: "_onSaveClicked",
-        value: function _onSaveClicked(event) {
-            event.preventDefault();
-            var errors = [];
-            if (!this._name.value || this._name.value.trim() === "") {
-                errors.push('A Deck name must be provided!');
-            }
-
-            if (errors.length <= 0) this.props.onSave(this._name.value, this._desc.value, this._tags.value);
-            this.setState({ errors: errors });
-        }
-    }]);
-
-    return NewDeck;
-}(_react2.default.Component);
-
-exports.default = NewDeck;
-
-},{"react":181}],185:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21955,7 +21755,7 @@ var WorkSpace = function (_React$Component) {
 
 exports.default = WorkSpace;
 
-},{"../objects/AppObject":189,"../objects/rpDeck":192,"./DeckList":182,"react":181}],186:[function(require,module,exports){
+},{"../objects/AppObject":188,"../objects/rpDeck":191,"./DeckList":182,"react":181}],185:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22010,7 +21810,7 @@ var ConfirmationModal = function (_React$Component) {
                     _react2.default.createElement(
                         'h3',
                         null,
-                        'Are you sure?'
+                        this.props.title || "Are you sure?"
                     ),
                     _react2.default.createElement(
                         'p',
@@ -22068,7 +21868,7 @@ var ConfirmationModal = function (_React$Component) {
 
 exports.default = ConfirmationModal;
 
-},{"boron/FadeModal":1,"react":181}],187:[function(require,module,exports){
+},{"boron/FadeModal":1,"react":181}],186:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22328,7 +22128,7 @@ var DeckModal = function (_React$Component) {
 
 exports.default = DeckModal;
 
-},{"../../objects/rpDeck":192,"boron/OutlineModal":2,"react":181}],188:[function(require,module,exports){
+},{"../../objects/rpDeck":191,"boron/OutlineModal":2,"react":181}],187:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -22362,7 +22162,7 @@ try {
 
 // constants
 
-},{"./components/WorkSpace":185,"./objects/AppObject":189,"react":181,"react-dom":38}],189:[function(require,module,exports){
+},{"./components/WorkSpace":184,"./objects/AppObject":188,"react":181,"react-dom":38}],188:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22456,7 +22256,7 @@ var AppObject = function () {
 
 exports.default = AppObject;
 
-},{"./defaultObj":190,"./rpCard":191,"./rpDeck":192}],190:[function(require,module,exports){
+},{"./defaultObj":189,"./rpCard":190,"./rpDeck":191}],189:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22482,7 +22282,7 @@ var defaultObj = {
 exports.guid = guid;
 exports.defaultObj = defaultObj;
 
-},{"./rpCard":191,"./rpDeck":192}],191:[function(require,module,exports){
+},{"./rpCard":190,"./rpDeck":191}],190:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22523,7 +22323,7 @@ var rpCard = function () {
 
 exports.default = rpCard;
 
-},{}],192:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22847,4 +22647,4 @@ var rpDeck = function () {
 
 exports.default = rpDeck;
 
-},{"./rpCard":191}]},{},[188]);
+},{"./rpCard":190}]},{},[187]);

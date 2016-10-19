@@ -1,10 +1,9 @@
 import React from 'react'; 
 import DeckListItem from './DeckListItem';  
-import OutlineModal from 'boron/OutlineModal';
-import NewDeck from './NewDeck';
-import rpDeck from '../objects/rpDeck';
 import ConfirmationModal from './modals/ConfirmationModal';
 import DeckModal from './modals/DeckModal';
+
+import rpDeck from '../objects/rpDeck';
 
 
 export default class DeckList extends React.Component {
@@ -53,19 +52,13 @@ export default class DeckList extends React.Component {
                 }
                 </ul>
 
-                <OutlineModal ref={(ref) => this.NewDeckModal = ref}>
-                    <NewDeck 
-                        onSave={this._onSaveDeck}
-                        onCancel={() => this.NewDeckModal.hide()}
-                    />
-                </OutlineModal>
 
                 <DeckModal 
                     ref={(ref) => this.newDeck = ref} 
                     onSave={this._onSaveDeck}  />
 
                 <ConfirmationModal ref={(ref) => this.confirmation = ref}
-                    key="0"
+                    title="Delete Deck?"
                     action="Are you sure you want to delete this Deck"
                     onYes={this._deleteDeck}
                  />
@@ -88,7 +81,6 @@ export default class DeckList extends React.Component {
     _onSaveDeck(deck){
         if(deck.id <= 0) rpDeck.addDeck(this.props.decks, deck);
         this.props.onDecksChanged();
-        this.NewDeckModal.hide();    
     }
     _onDeckDeleteClicked(deckId){
         this.confirmation.setState({key : deckId});

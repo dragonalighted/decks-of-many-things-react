@@ -16,7 +16,7 @@ export default class ConfirmationModal extends React.Component {
         return (
             <FadeModal ref={(modal) => this.modal = modal} >
                 <div className="modal-container row">
-                    <h3>Are you sure?</h3>
+                    <h3>{this.props.title || "Are you sure?"}</h3>
                     <p> {this.props.action || "Are you sure?"}</p>
                     <div className="pull-right" style={{marginRight: '2em', marginTop: '1em'}}>
                         <button type="button" className="btn btn-default" onClick={() =>  this._onNo() }>No</button>
