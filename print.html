@@ -1,0 +1,144 @@
+<html>
+    <head>
+        <title></title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <style>
+
+            .content {
+                width:8in;
+            }
+            .line {
+                display:inline-flex;
+                width:8in;
+            }
+            .record-tall, .record-short{
+                display:inline-block;
+                margin:0 0 0 0;
+                padding: 0 0 0 0;
+            }
+            .record-tall, .record-short{
+                height: 0.25in; 
+                width: 2in !important; 
+                border-style:solid;
+                border-color:black; 
+                border-width: 1 0 1 1;
+                background-color:red;
+                line
+            }
+            .record-tall {
+                height:0.45in;
+            }            
+
+            .value, .label {
+                margin:0;
+                padding: 1px 3px; 
+            }
+            .value{
+                text-align: right; 
+                text-transform: uppercase;
+                height:0.25in; 
+
+            }
+            .label {
+                text-align:left;
+                height:0.20in; 
+            }
+
+            .record-short {
+                height:.22in;
+            }
+            .record-short .label {
+                display:inline; 
+            }
+            .record-short .value{
+                float:right;
+            }
+            .label:after {
+                content:":";
+            }
+            .record-tall {
+            } 
+
+            .record-tall .record-short {
+                border-top:0;
+                border-left:0
+            } 
+
+            @media print {                
+                @page { 
+                    margin: .25in; 
+                    size: A4;    
+                }
+                div.header {
+                    position:fixed;
+                    top:0;
+                    width:100%;
+                    height:1in; 
+                    background-color: lightblue; 
+                }
+                div.footer {
+                    position:fixed;
+                    bottom:0;
+                    width:100%;
+                    height:1in; 
+                    background-color: lightblue; 
+                }
+
+
+            }
+
+
+
+
+        </style>
+
+        <script>
+            $(function(){
+                let records = $('.record-tall, .record-short');
+                for(let record of records){
+                    record = $(record);                     
+                    if(record.data('label')){
+                        let label = $('<div class="label"></div>');                     
+                        label.html(record.data('label'));
+                        record.append(label);
+                    }
+                    if(record.innerText().trim() !== '') {
+                        let value = $('<div class="value"></div>');
+                        value.html(record.innerText());
+                        record.innerText('');
+                        record.append(value);
+                    } 
+
+                }
+
+                records = $('.record');
+                for(let record of records) {
+
+                }
+            });
+        </script>
+
+    </head>
+    <body>
+        <div class="content">
+            <div class="line">
+                <div class="record-tall" data-label="Policy Number">1012212</div>
+                <div class="record-tall" data-label="Policy Year">2016</div>
+                <div class="record-tall">
+                    <div class="record-short"data-label="Policy Holder" data-sep="0.5in">James</div>
+                    <div class="record-short"data-label="Phone #" data-sep="0.5in">3213560422</div>
+                </div>
+                <div class="record-tall">
+                    <div class="record-short"data-label="Policy Holder" data-sep="0.5in">James</div>
+                    <div class="record-short"data-label="Phone #" data-sep="0.5in">3213560422</div>
+                </div>
+            </div>
+            <div class="line">
+                <div class="record-tall" data-label="Policy Number">1012212</div>
+                <div class="record-tall" data-label="Policy Year">2016</div>
+                    <div class="record-short" data-label="Policy Holder" data-sep="0.5in">James</div>
+                    <div class="record-short" data-label="Phone #" data-sep="0.5in">3213560422</div>
+            </div>
+        </div>
+    </body>
+</html>

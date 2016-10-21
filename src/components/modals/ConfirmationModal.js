@@ -14,12 +14,15 @@ export default class ConfirmationModal extends React.Component {
 
     render(){
         return (
-            <FadeModal ref={(modal) => this.modal = modal} >
+            <FadeModal ref={(modal) => this.modal = modal} 
+                closeOnClick={false}
+                onShow={() => this._onShow()}>
                 <div className="modal-container row">
                     <h3>{this.props.title || "Are you sure?"}</h3>
                     <p> {this.props.action || "Are you sure?"}</p>
                     <div className="pull-right" style={{marginRight: '2em', marginTop: '1em'}}>
-                        <button type="button" className="btn btn-default" onClick={() =>  this._onNo() }>No</button>
+                        <button type="button" className="btn btn-default" onClick={() =>  this._onNo() }
+                            ref={(ref) => this.btnCancel = ref}>No</button>
                         <button type="submit" className="btn btn-default" onClick={() => this._onYes()}>Yes</button>
                     </div>
                 </div>
@@ -27,7 +30,9 @@ export default class ConfirmationModal extends React.Component {
         );
 
     }
-
+    _onShow(){
+        this.btnCancel.focus();
+    }
     show(){
         this.modal.show();
     }

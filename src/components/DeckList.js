@@ -30,7 +30,6 @@ export default class DeckList extends React.Component {
                     onClick={() => {
                         this.newDeck.setDeck();
                         this.newDeck.show();
-                        //this.NewDeckModal.toggle();
                     } }>
                     Add Deck
                 </button>

@@ -34,7 +34,10 @@ export default class DeckModal extends React.Component{
     }
     render(){      
         return(
-            <OutlineModal ref={(modal) => this.modal = modal}>
+            <OutlineModal ref={(modal) => this.modal = modal} 
+                onShow={() => this._onShow()}
+                closeOnClick={false}
+                >
                 <div className="modal-container row">
                     {this._getErrors()}
                     <h2 >{this._getHeaderText()}</h2>
@@ -47,7 +50,7 @@ export default class DeckModal extends React.Component{
                                     name="name" 
                                     placeholder="Deck Name"
                                     defaultValue={this._getDeckName()}
-                                    ref={(input) => this._name = input}/>
+                                    ref={(input) => this.name = input}/>
                             </div>
                         </div>
                         <div className="form-group">
@@ -58,7 +61,7 @@ export default class DeckModal extends React.Component{
                                     className="form-control col-md-6"  
                                     placeholder="(Optional)"
                                     defaultValue={this._getDeckDesc()}
-                                    ref={(input) => this._desc = input} ></textarea>
+                                    ref={(input) => this.desc = input} ></textarea>
                             </div>
                         </div>
                         <div className="form-group">
@@ -69,7 +72,7 @@ export default class DeckModal extends React.Component{
                                     name="tags" 
                                     placeholder="(Optional) separated by commas" 
                                     defaultValue={this._getDeckTags()}
-                                    ref={(input) => this._tags = input}/>
+                                    ref={(input) => this.tags = input}/>
                             </div>
                         </div>
                         <div className="pull-right" style={{marginRight: '2em', marginTop: '1em'}}>
@@ -80,6 +83,9 @@ export default class DeckModal extends React.Component{
                 </div> 
             </OutlineModal>
         );
+    }
+    _onShow(){
+        this.name.focus();
     }
 
     _getDeckName(){
@@ -118,7 +124,7 @@ export default class DeckModal extends React.Component{
     _onSave(event){
         event.preventDefault();
         let errors = []; 
-        if(!this._name.value || this._name.value.trim() === "")
+        if(!this.name.value || this.name.value.trim() === "")
         {   
             errors.push('A Deck name must be provided!');
         }
@@ -126,9 +132,9 @@ export default class DeckModal extends React.Component{
         this.setState({errors});
         if(errors.length <= 0){
             if(this.props.onSave) {  
-                this.state.deck.name = this._name.value;
-                this.state.deck.desc = this._desc.value; 
-                this.state.deck.tags = this._tags.value.split(',').map(function(value, index) {
+                this.state.deck.name = this.name.value;
+                this.state.deck.desc = this.desc.value; 
+                this.state.deck.tags = this.tags.value.split(',').map(function(value, index) {
                     return value.trim();
                 })            
                 this.props.onSave(this.state.deck);

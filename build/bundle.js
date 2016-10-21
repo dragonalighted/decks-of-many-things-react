@@ -21495,7 +21495,6 @@ var DeckList = function (_React$Component) {
                         onClick: function onClick() {
                             _this2.newDeck.setDeck();
                             _this2.newDeck.show();
-                            //this.NewDeckModal.toggle();
                         } },
                     'Add Deck'
                 ),
@@ -21729,10 +21728,15 @@ var WorkSpace = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     'div',
-                    { className: 'ws-left-pane' },
-                    _react2.default.createElement(_DeckList2.default, { decks: appObj.decks,
-                        onDeckSelected: this._deckSelected,
-                        onDecksChanged: this._decksChanged })
+                    { className: 'ws-content' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'ws-left-pane' },
+                        _react2.default.createElement(_DeckList2.default, { decks: appObj.decks,
+                            onDeckSelected: this._deckSelected,
+                            onDecksChanged: this._decksChanged })
+                    ),
+                    _react2.default.createElement('div', { className: 'ws_right-pane' })
                 )
             );
         }
@@ -21803,6 +21807,10 @@ var ConfirmationModal = function (_React$Component) {
                 _FadeModal2.default,
                 { ref: function ref(modal) {
                         return _this2.modal = modal;
+                    },
+                    closeOnClick: false,
+                    onShow: function onShow() {
+                        return _this2._onShow();
                     } },
                 _react2.default.createElement(
                     'div',
@@ -21825,6 +21833,9 @@ var ConfirmationModal = function (_React$Component) {
                             'button',
                             { type: 'button', className: 'btn btn-default', onClick: function onClick() {
                                     return _this2._onNo();
+                                },
+                                ref: function ref(_ref) {
+                                    return _this2.btnCancel = _ref;
                                 } },
                             'No'
                         ),
@@ -21838,6 +21849,11 @@ var ConfirmationModal = function (_React$Component) {
                     )
                 )
             );
+        }
+    }, {
+        key: '_onShow',
+        value: function _onShow() {
+            this.btnCancel.focus();
         }
     }, {
         key: 'show',
@@ -21951,7 +21967,12 @@ var DeckModal = function (_React$Component) {
                 _OutlineModal2.default,
                 { ref: function ref(modal) {
                         return _this2.modal = modal;
-                    } },
+                    },
+                    onShow: function onShow() {
+                        return _this2._onShow();
+                    },
+                    closeOnClick: false
+                },
                 _react2.default.createElement(
                     'div',
                     { className: 'modal-container row' },
@@ -21981,7 +22002,7 @@ var DeckModal = function (_React$Component) {
                                     placeholder: 'Deck Name',
                                     defaultValue: this._getDeckName(),
                                     ref: function ref(input) {
-                                        return _this2._name = input;
+                                        return _this2.name = input;
                                     } })
                             )
                         ),
@@ -22002,7 +22023,7 @@ var DeckModal = function (_React$Component) {
                                     placeholder: '(Optional)',
                                     defaultValue: this._getDeckDesc(),
                                     ref: function ref(input) {
-                                        return _this2._desc = input;
+                                        return _this2.desc = input;
                                     } })
                             )
                         ),
@@ -22023,7 +22044,7 @@ var DeckModal = function (_React$Component) {
                                     placeholder: '(Optional) separated by commas',
                                     defaultValue: this._getDeckTags(),
                                     ref: function ref(input) {
-                                        return _this2._tags = input;
+                                        return _this2.tags = input;
                                     } })
                             )
                         ),
@@ -22044,6 +22065,11 @@ var DeckModal = function (_React$Component) {
                     )
                 )
             );
+        }
+    }, {
+        key: '_onShow',
+        value: function _onShow() {
+            this.name.focus();
         }
     }, {
         key: '_getDeckName',
@@ -22104,16 +22130,16 @@ var DeckModal = function (_React$Component) {
         value: function _onSave(event) {
             event.preventDefault();
             var errors = [];
-            if (!this._name.value || this._name.value.trim() === "") {
+            if (!this.name.value || this.name.value.trim() === "") {
                 errors.push('A Deck name must be provided!');
             }
 
             this.setState({ errors: errors });
             if (errors.length <= 0) {
                 if (this.props.onSave) {
-                    this.state.deck.name = this._name.value;
-                    this.state.deck.desc = this._desc.value;
-                    this.state.deck.tags = this._tags.value.split(',').map(function (value, index) {
+                    this.state.deck.name = this.name.value;
+                    this.state.deck.desc = this.desc.value;
+                    this.state.deck.tags = this.tags.value.split(',').map(function (value, index) {
                         return value.trim();
                     });
                     this.props.onSave(this.state.deck);
@@ -22468,7 +22494,7 @@ var rpDeck = function () {
             return this._name;
         },
         set: function set() {
-            var value = arguments.length <= 0 || arguments[0] === undefined ? "Un-Named Deck" : arguments[0];
+            var value = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
             this._name = value;
         }
     }, {

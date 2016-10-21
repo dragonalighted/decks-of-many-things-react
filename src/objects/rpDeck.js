@@ -19,7 +19,7 @@ export default class rpDeck {
     get id() {return this._id;}
     
     get name() {return this._name;}
-    set name(value = "Un-Named Deck") { this._name = value;}
+    set name(value = "") { this._name = value;}
 
     get desc() {return this._desc;}
     set desc(value = "") { this._desc = value;}

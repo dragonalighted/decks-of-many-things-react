@@ -20,10 +20,14 @@ export default class WorkSpace extends React.Component {
                 <div className="ws-title-bar">
                     <h1>Decks of Many Things</h1>
                 </div>
-                <div className="ws-left-pane">
-                    <DeckList decks={appObj.decks} 
-                        onDeckSelected={this._deckSelected}
-                        onDecksChanged={this._decksChanged} />
+                <div className="ws-content">
+                    <div className="ws-left-pane">
+                        <DeckList decks={appObj.decks} 
+                            onDeckSelected={this._deckSelected}
+                            onDecksChanged={this._decksChanged} />
+                    </div>
+                    <div className="ws_right-pane">
+                    </div>
                 </div>
             </div>
         );
