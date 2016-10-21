@@ -18,7 +18,11 @@ export default class ConfirmationModal extends React.Component {
                 closeOnClick={false}
                 onShow={() => this._onShow()}>
                 <div className="modal-container row">
-                    <h3>{this.props.title || "Are you sure?"}</h3>
+                    <span style={{color:"red", fontSize:"25pt"}} 
+                        className="text-danger glyphicon glyphicon-warning-sign pull-left">
+                    </span>
+
+                    <h3 style={{verticalAlign:"middle"}}>{this.props.title || "Are you sure?"}</h3>
                     <p> {this.props.action || "Are you sure?"}</p>
                     <div className="pull-right" style={{marginRight: '2em', marginTop: '1em'}}>
                         <button type="button" className="btn btn-default" onClick={() =>  this._onNo() }

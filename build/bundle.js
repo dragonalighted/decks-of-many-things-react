@@ -21435,13 +21435,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _DeckListItem = require('./DeckListItem');
+var _ItemList = require('./ItemList');
 
-var _DeckListItem2 = _interopRequireDefault(_DeckListItem);
-
-var _ConfirmationModal = require('./modals/ConfirmationModal');
-
-var _ConfirmationModal2 = _interopRequireDefault(_ConfirmationModal);
+var _ItemList2 = _interopRequireDefault(_ItemList);
 
 var _DeckModal = require('./modals/DeckModal');
 
@@ -21467,20 +21463,20 @@ var DeckList = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (DeckList.__proto__ || Object.getPrototypeOf(DeckList)).call(this, props));
 
-        _this.state = {
-            collapsed: false
-        };
-
-        _this._onDeckSelected = _this._onDeckSelected.bind(_this);
-        _this._onSaveDeck = _this._onSaveDeck.bind(_this);
-        _this._onDeckDeleteClicked = _this._onDeckDeleteClicked.bind(_this);
-        _this._onAddCardClicked = _this._onAddCardClicked.bind(_this);
-        _this._onEditDeckClicked = _this._onEditDeckClicked.bind(_this);
-        _this._deleteDeck = _this._deleteDeck.bind(_this);
+        _this.state = _this._initialState();
+        _this._getTooltip = _this._getTooltip.bind(_this);
         return _this;
     }
 
     _createClass(DeckList, [{
+        key: '_initialState',
+        value: function _initialState() {}
+    }, {
+        key: '_getTooltip',
+        value: function _getTooltip(item) {
+            return item.desc + '\nTags: ' + item.tags.join(', ');
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this2 = this;
@@ -21488,58 +21484,62 @@ var DeckList = function (_React$Component) {
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(
-                    'button',
-                    {
-                        className: 'btn btn-md btn-success pull-right margin-right-10 margin-top-10',
-                        onClick: function onClick() {
-                            _this2.newDeck.setDeck();
-                            _this2.newDeck.show();
-                        } },
-                    'Add Deck'
-                ),
-                _react2.default.createElement(
-                    'h3',
-                    { className: 'margin-0 padding-10' },
-                    'Decks'
-                ),
-                _react2.default.createElement(
-                    'ul',
-                    { className: 'deck-list greedy' },
-                    this.props.decks.map(function (deck) {
-                        return _react2.default.createElement(_DeckListItem2.default, {
-                            key: deck.id,
-                            deck: deck,
-                            onDeleteDeck: this._onDeckDeleteClicked,
-                            onAddCard: this._onAddCardClicked,
-                            onSelected: this._onDeckSelected,
-                            onEditDeck: this._onEditDeckClicked
-                        });
-                    }, this)
-                ),
+                _react2.default.createElement(_ItemList2.default, {
+                    items: this.props.decks,
+                    title: 'Decks',
+                    itemTypeName: 'Deck',
+                    getTooltip: function getTooltip(item) {
+                        return _this2._getTooltip(item);
+                    },
+                    getName: function getName(item) {
+                        return item.name + ' (' + item.cards.length + ')';
+                    },
+                    onAddItem: function onAddItem() {
+                        return _this2._onAddItem();
+                    },
+                    onEditItem: function onEditItem(deckId) {
+                        return _this2._onEditItem(deckId);
+                    },
+                    onDeleteItem: function onDeleteItem(deckId) {
+                        return _this2._onDeleteItem(deckId);
+                    },
+                    onAddToItem: function onAddToItem(deckId) {
+                        return alert('addToItem clicked (deck list)');
+                    },
+                    onSelectItem: function onSelectItem(deckId) {
+                        return _this2._onSelectItem(deckId);
+                    }
+                }),
                 _react2.default.createElement(_DeckModal2.default, {
                     ref: function ref(_ref) {
-                        return _this2.newDeck = _ref;
+                        return _this2.dlgNewDeck = _ref;
                     },
-                    onSave: this._onSaveDeck }),
-                _react2.default.createElement(_ConfirmationModal2.default, { ref: function ref(_ref2) {
-                        return _this2.confirmation = _ref2;
-                    },
-                    title: 'Delete Deck?',
-                    action: 'Are you sure you want to delete this Deck',
-                    onYes: this._deleteDeck
-                })
+                    onSave: function onSave(deck) {
+                        return _this2._onSaveDeck(deck);
+                    } })
             );
         }
     }, {
-        key: '_onEditDeckClicked',
-        value: function _onEditDeckClicked(deckId) {
-            this.newDeck.setDeck(_rpDeck2.default.getDeck(this.props.decks, deckId));
-            this.newDeck.show();
+        key: '_onAddItem',
+        value: function _onAddItem() {
+            this.dlgNewDeck.setDeck();
+            this.dlgNewDeck.show();
         }
     }, {
-        key: '_onDeckSelected',
-        value: function _onDeckSelected(deckId) {
+        key: '_onDeleteItem',
+        value: function _onDeleteItem(deckId) {
+            _rpDeck2.default.removeDeck(this.props.decks, deckId);
+            this.props.onDecksChanged();
+        }
+    }, {
+        key: '_onEditItem',
+        value: function _onEditItem(deckId) {
+            this.dlgNewDeck.setDeck(_rpDeck2.default.getDeck(this.props.decks, deckId));
+            this.dlgNewDeck.show();
+        }
+    }, {
+        key: '_onSelectItem',
+        value: function _onSelectItem(deckId) {
             _rpDeck2.default.selectDeck(this.props.decks, deckId);
             this.props.onDeckSelected(deckId);
         }
@@ -21549,23 +21549,6 @@ var DeckList = function (_React$Component) {
             if (deck.id <= 0) _rpDeck2.default.addDeck(this.props.decks, deck);
             this.props.onDecksChanged();
         }
-    }, {
-        key: '_onDeckDeleteClicked',
-        value: function _onDeckDeleteClicked(deckId) {
-            this.confirmation.setState({ key: deckId });
-            this.confirmation.show();
-        }
-    }, {
-        key: '_deleteDeck',
-        value: function _deleteDeck(deckId) {
-            _rpDeck2.default.removeDeck(this.props.decks, deckId);
-            this.props.onDecksChanged();
-        }
-    }, {
-        key: '_onAddCardClicked',
-        value: function _onAddCardClicked(event) {
-            alert('Add Card Clicked!');
-        }
     }]);
 
     return DeckList;
@@ -21573,7 +21556,190 @@ var DeckList = function (_React$Component) {
 
 exports.default = DeckList;
 
-},{"../objects/rpDeck":191,"./DeckListItem":183,"./modals/ConfirmationModal":185,"./modals/DeckModal":186,"react":181}],183:[function(require,module,exports){
+},{"../objects/rpDeck":192,"./ItemList":183,"./modals/DeckModal":187,"react":181}],183:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _ItemListItem = require('./ItemListItem');
+
+var _ItemListItem2 = _interopRequireDefault(_ItemListItem);
+
+var _ConfirmationModal = require('./modals/ConfirmationModal');
+
+var _ConfirmationModal2 = _interopRequireDefault(_ConfirmationModal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ItemList = function (_React$Component) {
+    _inherits(ItemList, _React$Component);
+
+    function ItemList(props) {
+        _classCallCheck(this, ItemList);
+
+        var _this = _possibleConstructorReturn(this, (ItemList.__proto__ || Object.getPrototypeOf(ItemList)).call(this, props));
+
+        if (!_this.props.itemTypeName) _this.props.itemTypeName;
+        _this.state = _this._initialState();
+        _this._handleItemDelete = _this._handleItemDelete.bind(_this);
+        _this._deleteItem = _this._deleteItem.bind(_this);
+        return _this;
+    }
+
+    _createClass(ItemList, [{
+        key: '_initialState',
+        value: function _initialState() {
+            return {
+                selectedId: null
+            };
+        }
+    }, {
+        key: '_handleItemSelected',
+        value: function _handleItemSelected(itemId) {
+
+            if (!this.props.multiSelect) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = this.listItems[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var listItem = _step.value;
+
+                        if (listItem.itemId !== itemId && listItem.selected === true) listItem.selected = false;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+
+            if (this.props.onSelectItem) this.props.onSelectItem(itemId);
+        }
+    }, {
+        key: '_handleItemDelete',
+        value: function _handleItemDelete(itemId) {
+            this.confirmDelete.setState({ key: itemId });
+            this.confirmDelete.show();
+        }
+    }, {
+        key: '_deleteItem',
+        value: function _deleteItem(itemId) {
+            if (this.props.onDeleteItem) this.props.onDeleteItem(itemId);
+        }
+    }, {
+        key: '_getListTitle',
+        value: function _getListTitle() {
+            if (this.props.title) {
+                return _react2.default.createElement(
+                    'h3',
+                    { className: 'margin-0 padding-10' },
+                    this.props.title
+                );
+            }
+        }
+    }, {
+        key: '_getAddButton',
+        value: function _getAddButton() {
+            var _this2 = this;
+
+            if (this.props.onAddItem) {
+                return _react2.default.createElement(
+                    'button',
+                    { className: 'btn btn-md btn-success pull-right margin-right-10 margin-top-10',
+                        onClick: function onClick() {
+                            return _this2.props.onAddItem();
+                        } },
+                    'Add ',
+                    this.props.itemTypeName
+                );
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            return _react2.default.createElement(
+                'div',
+                null,
+                this._getAddButton(),
+                this._getListTitle(),
+                _react2.default.createElement(
+                    'ul',
+                    { className: 'deck-list greedy', ref: function ref(_ref2) {
+                            return _this3.list = _ref2;
+                        } },
+                    this.props.items.map(function (item) {
+                        var _this4 = this;
+
+                        var id = this.props.getItemId ? this.props.getItemId(item) : undefined;
+                        var name = this.props.getName ? this.props.getName(item) : undefined;
+                        var tooltip = this.props.getTooltip ? this.props.getTooltip(item) : undefined;
+                        return _react2.default.createElement(_ItemListItem2.default, {
+                            ref: function ref(_ref) {
+                                if (!_this4.listItems) _this4.listItems = [];
+                                _this4.listItems.push(_ref);
+                            },
+                            key: id || item.key || item.id || null,
+                            itemId: id || item.key || item.id || null,
+                            name: name || item.name || '',
+                            tooltip: tooltip || item.tooltip || null,
+                            onDelete: this.props.onDeleteItem ? this._handleItemDelete : undefined,
+                            onAdd: this.props.onAddToItem,
+                            onSelect: function onSelect(itemId) {
+                                return _this4._handleItemSelected(itemId);
+                            },
+                            onEdit: this.props.onEditItem
+                        });
+                    }, this)
+                ),
+                _react2.default.createElement(_ConfirmationModal2.default, { ref: function ref(_ref3) {
+                        return _this3.confirmDelete = _ref3;
+                    },
+                    title: 'Delete ' + this.props.itemTypeName,
+                    action: 'Are you sure you want to delete this ' + this.props.itemTypeName + '?',
+                    onYes: this._deleteItem })
+            );
+        }
+    }]);
+
+    return ItemList;
+}(_react2.default.Component);
+
+exports.default = ItemList;
+
+ItemList.defaultProps = {
+    items: [],
+    itemTypeName: "Item",
+    multiSelect: false
+};
+
+},{"./ItemListItem":184,"./modals/ConfirmationModal":186,"react":181}],184:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21594,74 +21760,109 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DeskListItem = function (_React$Component) {
-    _inherits(DeskListItem, _React$Component);
+var ItemListItem = function (_React$Component) {
+    _inherits(ItemListItem, _React$Component);
 
-    function DeskListItem(props) {
-        _classCallCheck(this, DeskListItem);
+    function ItemListItem(props) {
+        _classCallCheck(this, ItemListItem);
 
-        var _this = _possibleConstructorReturn(this, (DeskListItem.__proto__ || Object.getPrototypeOf(DeskListItem)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (ItemListItem.__proto__ || Object.getPrototypeOf(ItemListItem)).call(this, props));
 
-        _this._onListItemClicked = _this._onListItemClicked.bind(_this);
+        _this.state = _this._initialState();
+        if (props.itemId === undefined || props.itemId === null) {
+            throw "Property 'itemId' must be defined in ItemListItem";
+        }
+        _this._itemSelected = _this._itemSelected.bind(_this);
+        _this._handleDelete = _this._handleDelete.bind(_this);
+        _this._handleAdd = _this._handleAdd.bind(_this);
+        _this._handleEdit = _this._handleEdit.bind(_this);
         return _this;
     }
 
-    _createClass(DeskListItem, [{
+    _createClass(ItemListItem, [{
+        key: '_itemSelected',
+        value: function _itemSelected() {
+            this.setState({ selected: true });
+            if (this.props.onSelect) this.props.onSelect(this.props.itemId);
+        }
+    }, {
+        key: '_handleDelete',
+        value: function _handleDelete() {
+            if (this.props.onDelete) this.props.onDelete(this.props.itemId);
+        }
+    }, {
+        key: '_handleAdd',
+        value: function _handleAdd() {
+            if (this.props.onAdd) this.props.onAdd(this.props.itemId);
+        }
+    }, {
+        key: '_handleEdit',
+        value: function _handleEdit() {
+            if (this.props.onEdit) this.props.onEdit(this.props.itemId);
+        }
+    }, {
+        key: '_initialState',
+        value: function _initialState() {
+            return { selected: false };
+        }
+    }, {
+        key: '_getButton',
+        value: function _getButton(handler) {
+            var icon = arguments.length <= 1 || arguments[1] === undefined ? 'glyphicon-menu-hamburger' : arguments[1];
+            var addedClasses = arguments.length <= 2 || arguments[2] === undefined ? '' : arguments[2];
+            var tooltip = arguments.length <= 3 || arguments[3] === undefined ? '' : arguments[3];
+
+            return _react2.default.createElement('span', { className: 'ctrl glyphicon ' + icon + ' ' + addedClasses, title: tooltip, onClick: handler });
+        }
+    }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+
+            var editIcon = this.props.onEdit ? this._getButton(this._handleEdit, 'glyphicon-pencil', 'margin-right-10', 'Edit') : null;
+            var deleteIcon = this.props.onDelete ? this._getButton(this._handleDelete, 'glyphicon-trash', '', 'Delete') : null;
+            var addIcon = this.props.onAdd ? this._getButton(this._handleAdd, 'glyphicon-plus', 'margin-right-10', 'Add To') : null;
 
             return _react2.default.createElement(
                 'li',
-                { className: this.props.deck.selected ? 'selected' : '' },
+                { className: this.state.selected ? 'selected' : '', 'data-value': this.props.itemId },
                 _react2.default.createElement(
                     'span',
-                    { onClick: this._onListItemClicked,
-                        title: this._getToolTip(),
+                    { onClick: this._itemSelected,
+                        title: this.props.tooltip,
                         className: 'ctrl padding-right-10' },
-                    this.props.deck.name,
-                    ' (',
-                    (this.props.deck.cards || []).length,
-                    ')'
+                    this.props.name
                 ),
                 _react2.default.createElement(
                     'div',
                     { className: 'inline-block pull-right padding-right-10' },
-                    _react2.default.createElement('span', { className: 'ctrl glyphicon glyphicon-pencil margin-right-10',
-                        title: 'Edit Deck Card',
-                        onClick: function onClick() {
-                            return _this2.props.onEditDeck(_this2.props.deck.id);
-                        } }),
-                    _react2.default.createElement('span', { className: 'ctrl glyphicon glyphicon-plus margin-right-10',
-                        title: 'Add New Card',
-                        onClick: this.props.onAddCard }),
-                    _react2.default.createElement('span', { className: 'ctrl glyphicon glyphicon-trash',
-                        title: 'Delete Deck',
-                        onClick: function onClick() {
-                            return _this2.props.onDeleteDeck(_this2.props.deck.id);
-                        } })
+                    editIcon,
+                    addIcon,
+                    deleteIcon
                 )
             );
         }
     }, {
-        key: '_getToolTip',
-        value: function _getToolTip() {
-            return 'description: ' + (this.props.deck.desc || "N/A") + '\ntags: ' + this.props.deck.tags.join(', ');
+        key: 'itemId',
+        get: function get() {
+            return this.props.itemId;
         }
     }, {
-        key: '_onListItemClicked',
-        value: function _onListItemClicked(e) {
-            e.preventDefault();
-            this.props.onSelected(this.props.deck.id);
+        key: 'selected',
+        get: function get() {
+            return this.state.selected;
+        },
+        set: function set() {
+            var value = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+            this.setState({ selected: value });
         }
     }]);
 
-    return DeskListItem;
+    return ItemListItem;
 }(_react2.default.Component);
 
-exports.default = DeskListItem;
+exports.default = ItemListItem;
 
-},{"react":181}],184:[function(require,module,exports){
+},{"react":181}],185:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21686,6 +21887,10 @@ var _AppObject = require('../objects/AppObject');
 
 var _AppObject2 = _interopRequireDefault(_AppObject);
 
+var _ItemList = require('./ItemList');
+
+var _ItemList2 = _interopRequireDefault(_ItemList);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21703,7 +21908,8 @@ var WorkSpace = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (WorkSpace.__proto__ || Object.getPrototypeOf(WorkSpace)).call(this, props));
 
         _this.state = {
-            appObj: props.appObj
+            appObj: props.appObj,
+            items: [{ id: 1, name: "test" }, { id: 2, name: "oh no" }]
         };
         _this._deckSelected = _this._deckSelected.bind(_this);
         _this._decksChanged = _this._decksChanged.bind(_this);
@@ -21719,24 +21925,58 @@ var WorkSpace = function (_React$Component) {
                 { className: 'work-space' },
                 _react2.default.createElement(
                     'div',
-                    { className: 'ws-title-bar' },
+                    { className: 'container-fluid ws-title-bar' },
                     _react2.default.createElement(
-                        'h1',
-                        null,
-                        'Decks of Many Things'
+                        'div',
+                        { className: 'row' },
+                        _react2.default.createElement(
+                            'h1',
+                            null,
+                            'Decks of Many Things'
+                        )
                     )
                 ),
                 _react2.default.createElement(
                     'div',
-                    { className: 'ws-content' },
+                    { className: 'container-fluid ws-content' },
                     _react2.default.createElement(
                         'div',
-                        { className: 'ws-left-pane' },
-                        _react2.default.createElement(_DeckList2.default, { decks: appObj.decks,
-                            onDeckSelected: this._deckSelected,
-                            onDecksChanged: this._decksChanged })
-                    ),
-                    _react2.default.createElement('div', { className: 'ws_right-pane' })
+                        { className: 'row' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-lg-3 col-md-3 col-sm-3' },
+                            _react2.default.createElement(_DeckList2.default, { decks: appObj.decks,
+                                onDeckSelected: this._deckSelected,
+                                onDecksChanged: this._decksChanged })
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-lg-9 col-md-9 col-sm-9' },
+                            _react2.default.createElement(_ItemList2.default, {
+                                items: this.state.items,
+                                title: 'Test List',
+                                itemTypeName: 'Junk',
+                                getTooltip: function getTooltip(item) {
+                                    return item.name;
+                                },
+                                onDeleteItem: function onDeleteItem() {
+                                    return alert('onDeleteItem Called');
+                                },
+                                onEditItem: function onEditItem() {
+                                    return alert('onEditItem called');
+                                },
+                                onAddToItem: function onAddToItem() {
+                                    return alert('onAddToItem Called');
+                                },
+                                onSelectItem: function onSelectItem() {
+                                    return alert('onSelectItem called');
+                                },
+                                onAddItem: function onAddItem() {
+                                    return alert('onAddItem Called');
+                                }
+                            })
+                        )
+                    )
                 )
             );
         }
@@ -21759,7 +21999,7 @@ var WorkSpace = function (_React$Component) {
 
 exports.default = WorkSpace;
 
-},{"../objects/AppObject":188,"../objects/rpDeck":191,"./DeckList":182,"react":181}],185:[function(require,module,exports){
+},{"../objects/AppObject":189,"../objects/rpDeck":192,"./DeckList":182,"./ItemList":183,"react":181}],186:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21815,9 +22055,11 @@ var ConfirmationModal = function (_React$Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'modal-container row' },
+                    _react2.default.createElement('span', { style: { color: "red", fontSize: "25pt" },
+                        className: 'text-danger glyphicon glyphicon-warning-sign pull-left' }),
                     _react2.default.createElement(
                         'h3',
-                        null,
+                        { style: { verticalAlign: "middle" } },
                         this.props.title || "Are you sure?"
                     ),
                     _react2.default.createElement(
@@ -21884,7 +22126,7 @@ var ConfirmationModal = function (_React$Component) {
 
 exports.default = ConfirmationModal;
 
-},{"boron/FadeModal":1,"react":181}],186:[function(require,module,exports){
+},{"boron/FadeModal":1,"react":181}],187:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22154,7 +22396,7 @@ var DeckModal = function (_React$Component) {
 
 exports.default = DeckModal;
 
-},{"../../objects/rpDeck":191,"boron/OutlineModal":2,"react":181}],187:[function(require,module,exports){
+},{"../../objects/rpDeck":192,"boron/OutlineModal":2,"react":181}],188:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -22188,7 +22430,7 @@ try {
 
 // constants
 
-},{"./components/WorkSpace":184,"./objects/AppObject":188,"react":181,"react-dom":38}],188:[function(require,module,exports){
+},{"./components/WorkSpace":185,"./objects/AppObject":189,"react":181,"react-dom":38}],189:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22282,7 +22524,7 @@ var AppObject = function () {
 
 exports.default = AppObject;
 
-},{"./defaultObj":189,"./rpCard":190,"./rpDeck":191}],189:[function(require,module,exports){
+},{"./defaultObj":190,"./rpCard":191,"./rpDeck":192}],190:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22308,7 +22550,7 @@ var defaultObj = {
 exports.guid = guid;
 exports.defaultObj = defaultObj;
 
-},{"./rpCard":190,"./rpDeck":191}],190:[function(require,module,exports){
+},{"./rpCard":191,"./rpDeck":192}],191:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22349,7 +22591,7 @@ var rpCard = function () {
 
 exports.default = rpCard;
 
-},{}],191:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -22673,4 +22915,4 @@ var rpDeck = function () {
 
 exports.default = rpDeck;
 
-},{"./rpCard":190}]},{},[187]);
+},{"./rpCard":191}]},{},[188]);
