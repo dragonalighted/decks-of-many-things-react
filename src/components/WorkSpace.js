@@ -3,6 +3,7 @@ import DeckList from './DeckList';
 import rpDeck from '../objects/rpDeck';
 import AppObject from '../objects/AppObject';
 import ItemList from './ItemList';
+import List from './List';
 
 export default class WorkSpace extends React.Component {
     constructor(props){
@@ -12,7 +13,7 @@ export default class WorkSpace extends React.Component {
             items : [
                 {id: 1, name:"test"} ,
                 {id: 2, name:"oh no"}
-            ]
+            ], 
             }
         this._deckSelected = this._deckSelected.bind(this);
         this._decksChanged = this._decksChanged.bind(this);
@@ -34,17 +35,6 @@ export default class WorkSpace extends React.Component {
                                 onDecksChanged={this._decksChanged} />
                         </div>                        
                         <div className="col-lg-9 col-md-9 col-sm-9">
-                            <ItemList 
-                                items={this.state.items}
-                                title="Test List"
-                                itemTypeName="Junk"
-                                getTooltip={(item) => item.name}
-                                onDeleteItem={() => alert('onDeleteItem Called')}
-                                onEditItem={() => alert('onEditItem called')}
-                                onAddToItem={() => alert('onAddToItem Called')}
-                                onSelectItem={() => alert('onSelectItem called')}
-                                onAddItem={() => alert('onAddItem Called')}
-                            />
                         </div>
                     </div>
                 </div>

@@ -30,14 +30,14 @@ h4.deckName,h5.deckName, h6.deckName{
     padding:10px;    
 }
 
-.deck-list li span:hover {
-    color: whitesmoke; 
-    font-size:14pt;
-
+.deck-list li:hover {
+    border:1px solid yellow; 
+    border-radius:5px;
+    cursor:pointer;
 }
 
 .deck-list span.ctrl:hover {
-    cursor:pointer;
+    color: whitesmoke; 
 }
 
 .deck-list li.selected {

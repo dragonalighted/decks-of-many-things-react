@@ -94,6 +94,32 @@ export default class ItemList extends React.Component {
             </div>
         )
     }
+
+    static ListItemWrapperFactory(WrappedComponent){
+        let classListItem = class ListItemWrapper extends React.Component{
+
+            constructor(props){
+                super(props);
+            }
+
+            render(){
+
+                let wrappedProps = Object.assign({}, this.props);
+                delete wrappedProps["liStyle"];
+                delete wrappedProps["liClass"];
+                delete wrappedProps["onSelect"];
+                return (
+                    <li style={this.props.liStyle} 
+                        className={`${this.props.liClass} ${this.props.selected ? this.props.selectedClass || 'selected':''}`} 
+                        data-value={this.props.itemId}
+                        onClick={() =>{ if(this.props.onSelect){ this.props.onSelect(this.props.itemId); } } }>
+                            <WrappedComponent {...this.props} />
+                    </li>
+                );
+            }
+        }
+        return classListItem;
+    }
 }
 ItemList.defaultProps = {
     items:[],
