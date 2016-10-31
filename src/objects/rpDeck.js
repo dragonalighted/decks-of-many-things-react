@@ -138,6 +138,7 @@ export default class rpDeck {
                 return deck;
             }
         }
+        return null;
     }
 }
 

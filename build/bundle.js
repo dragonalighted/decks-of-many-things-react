@@ -21423,6 +21423,115 @@ module.exports = validateDOMNesting;
 module.exports = require('./lib/React');
 
 },{"./lib/React":64}],182:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Card = function (_React$Component) {
+    _inherits(Card, _React$Component);
+
+    function Card() {
+        _classCallCheck(this, Card);
+
+        return _possibleConstructorReturn(this, (Card.__proto__ || Object.getPrototypeOf(Card)).apply(this, arguments));
+    }
+
+    _createClass(Card, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "card", "data-value": this.props.item.id },
+                this.props.item.name
+            );
+        }
+    }]);
+
+    return Card;
+}(_react2.default.Component);
+
+exports.default = Card;
+
+},{"react":181}],183:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _List = require('./List');
+
+var _List2 = _interopRequireDefault(_List);
+
+var _Card = require('./Card');
+
+var _Card2 = _interopRequireDefault(_Card);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CardList = function (_React$Component) {
+    _inherits(CardList, _React$Component);
+
+    function CardList(props) {
+        _classCallCheck(this, CardList);
+
+        var _this = _possibleConstructorReturn(this, (CardList.__proto__ || Object.getPrototypeOf(CardList)).call(this, props));
+
+        _this._itemHandler = _this._itemHandler.bind(_this);
+        return _this;
+    }
+
+    _createClass(CardList, [{
+        key: 'render',
+        value: function render() {
+
+            return _react2.default.createElement(_List2.default, { title: 'Cards', type: 'Card',
+                items: this.props.cards,
+                _itemHandler: this._itemHandler,
+                buildItem: function buildItem(props) {
+                    return _react2.default.createElement(_Card2.default, props);
+                }
+            });
+        }
+    }, {
+        key: '_itemHandler',
+        value: function _itemHandler(command, item, id) {}
+    }]);
+
+    return CardList;
+}(_react2.default.Component);
+
+exports.default = CardList;
+
+},{"./Card":182,"./List":185,"react":181}],184:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21471,9 +21580,7 @@ var DeckList = function (_React$Component) {
     _createClass(DeckList, [{
         key: '_initialState',
         value: function _initialState() {
-            return {
-                decks: this.props.decks
-            };
+            return {};
         }
     }, {
         key: '_getTooltip',
@@ -21488,14 +21595,18 @@ var DeckList = function (_React$Component) {
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_List2.default, {
-                    items: this.state.decks,
-                    title: 'Decks',
+                _react2.default.createElement(_List2.default, { title: 'Decks', type: 'Deck',
+                    items: this.props.decks,
                     itemHandler: this._itemHandler,
-                    type: 'Deck',
                     className: 'deck-list greedy',
                     allow: 'edit|add|trash|new',
-                    confirmDelete: 'true'
+                    confirmDelete: 'true',
+                    itemTooltip: function itemTooltip(item) {
+                        return (item.desc ? item.desc + '\n\n\t' : '') + 'Tags: ' + item.tags.join(', ');
+                    },
+                    itemName: function itemName(item) {
+                        return item.name + ' (' + (item.cards ? item.cards.length : '0') + ')';
+                    }
                 }),
                 _react2.default.createElement(_DeckModal2.default, {
                     ref: function ref(_ref) {
@@ -21516,25 +21627,24 @@ var DeckList = function (_React$Component) {
                     break;
                 case 'trash':
                 case 'delete':
+                case 'dispose':
                     _rpDeck2.default.removeDeck(this.props.decks, id);
                     this.props.onDecksChanged();
                     break;
                 case 'edit':
-                    this.dlgNewDeck.setDeck(_rpDeck2.default.getDeck(this.state.decks, id));
+                    this.dlgNewDeck.setDeck(_rpDeck2.default.getDeck(this.props.decks, id));
                     this.dlgNewDeck.show();
                     break;
+                case 'deselect':
                 case 'add':
+                    break;
+                case 'select':
+                    this.props.onDeckSelected(id);
                     break;
                 default:
                     console.log(command + '  on ' + id + ':' + item.name);
                     break;
             }
-        }
-    }, {
-        key: '_onSelectItem',
-        value: function _onSelectItem(deckId) {
-            _rpDeck2.default.selectDeck(this.props.decks, deckId);
-            this.props.onDeckSelected(deckId);
         }
     }, {
         key: '_onSaveDeck',
@@ -21547,419 +21657,9 @@ var DeckList = function (_React$Component) {
     return DeckList;
 }(_react2.default.Component);
 
-// export default class DeckList extends React.Component {
-
-//     constructor(props){
-//         super(props);
-//         this.state = this._initialState();
-//         this._getTooltip = this._getTooltip.bind(this);
-//     }
-
-//     _initialState(){
-//     }
-//     _getTooltip(item) {
-//         return `${item.desc}
-// Tags: ${item.tags.join(', ')}`;
-//     }
-//     render(){
-//         return(
-//             <div>
-//                 <ItemList 
-//                     items={this.props.decks}
-//                     title="Decks"
-//                     itemTypeName="Deck"
-//                     getTooltip={(item) => this._getTooltip(item)}
-//                     getName={(item)=> `${item.name} (${item.cards.length})`}
-//                     onAddItem={()=> this._onAddItem()}
-//                     onEditItem={(deckId)=> this._onEditItem(deckId)}
-//                     onDeleteItem={(deckId)=> this._onDeleteItem(deckId)}
-//                     onAddToItem={(deckId)=> alert('addToItem clicked (deck list)')}
-//                     onSelectItem={(deckId)=> this._onSelectItem(deckId) }
-//                 />
-
-//                 <DeckModal 
-//                     ref={(ref) => this.dlgNewDeck = ref} 
-//                     onSave={(deck) => this._onSaveDeck(deck)}  />
-//             </div>
-//         );        
-//     }
-
-//     _onAddItem(){
-//         this.dlgNewDeck.setDeck();
-//         this.dlgNewDeck.show(); 
-//     }
-//     _onDeleteItem(deckId){
-//         rpDeck.removeDeck(this.props.decks, deckId);
-//         this.props.onDecksChanged();
-//     }
-//     _onEditItem(deckId) {
-//         this.dlgNewDeck.setDeck(rpDeck.getDeck(this.props.decks, deckId));
-//         this.dlgNewDeck.show();
-//     }
-
-//     _onSelectItem(deckId){
-//         rpDeck.selectDeck(this.props.decks, deckId);
-//         this.props.onDeckSelected(deckId);
-//     }
-
-//     _onSaveDeck(deck){
-//         if(deck.id <= 0) rpDeck.addDeck(this.props.decks, deck);
-//         this.props.onDecksChanged();
-//     }
-
-
-// }
-
-
 exports.default = DeckList;
 
-},{"../objects/rpDeck":193,"./List":185,"./modals/DeckModal":188,"react":181}],183:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _ItemListItem = require('./ItemListItem');
-
-var _ItemListItem2 = _interopRequireDefault(_ItemListItem);
-
-var _ConfirmationModal = require('./modals/ConfirmationModal');
-
-var _ConfirmationModal2 = _interopRequireDefault(_ConfirmationModal);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ItemList = function (_React$Component) {
-    _inherits(ItemList, _React$Component);
-
-    function ItemList(props) {
-        _classCallCheck(this, ItemList);
-
-        var _this = _possibleConstructorReturn(this, (ItemList.__proto__ || Object.getPrototypeOf(ItemList)).call(this, props));
-
-        if (!_this.props.itemTypeName) _this.props.itemTypeName;
-        _this.state = _this._initialState();
-        _this._handleItemDelete = _this._handleItemDelete.bind(_this);
-        _this._deleteItem = _this._deleteItem.bind(_this);
-        return _this;
-    }
-
-    _createClass(ItemList, [{
-        key: '_initialState',
-        value: function _initialState() {
-            return {
-                selectedId: null
-            };
-        }
-    }, {
-        key: '_handleItemSelected',
-        value: function _handleItemSelected(itemId) {
-
-            if (!this.props.multiSelect) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = this.listItems[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var listItem = _step.value;
-
-                        if (listItem.itemId !== itemId && listItem.selected === true) listItem.selected = false;
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-
-            if (this.props.onSelectItem) this.props.onSelectItem(itemId);
-        }
-    }, {
-        key: '_handleItemDelete',
-        value: function _handleItemDelete(itemId) {
-            this.confirmDelete.setState({ key: itemId });
-            this.confirmDelete.show();
-        }
-    }, {
-        key: '_deleteItem',
-        value: function _deleteItem(itemId) {
-            if (this.props.onDeleteItem) this.props.onDeleteItem(itemId);
-        }
-    }, {
-        key: '_getListTitle',
-        value: function _getListTitle() {
-            if (this.props.title) {
-                return _react2.default.createElement(
-                    'h3',
-                    { className: 'margin-0 padding-10' },
-                    this.props.title
-                );
-            }
-        }
-    }, {
-        key: '_getAddButton',
-        value: function _getAddButton() {
-            var _this2 = this;
-
-            if (this.props.onAddItem) {
-                return _react2.default.createElement(
-                    'button',
-                    { className: 'btn btn-md btn-success pull-right margin-right-10 margin-top-10',
-                        onClick: function onClick() {
-                            return _this2.props.onAddItem();
-                        } },
-                    'Add ',
-                    this.props.itemTypeName
-                );
-            }
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this3 = this;
-
-            return _react2.default.createElement(
-                'div',
-                null,
-                this._getAddButton(),
-                this._getListTitle(),
-                _react2.default.createElement(
-                    'ul',
-                    { className: 'deck-list greedy', ref: function ref(_ref2) {
-                            return _this3.list = _ref2;
-                        } },
-                    this.props.items.map(function (item) {
-                        var _this4 = this;
-
-                        var id = this.props.getItemId ? this.props.getItemId(item) : undefined;
-                        var name = this.props.getName ? this.props.getName(item) : undefined;
-                        var tooltip = this.props.getTooltip ? this.props.getTooltip(item) : undefined;
-                        return _react2.default.createElement(_ItemListItem2.default, {
-                            ref: function ref(_ref) {
-                                if (!_this4.listItems) _this4.listItems = [];
-                                _this4.listItems.push(_ref);
-                            },
-                            key: id || item.key || item.id || null,
-                            itemId: id || item.key || item.id || null,
-                            name: name || item.name || '',
-                            tooltip: tooltip || item.tooltip || null,
-                            onDelete: this.props.onDeleteItem ? this._handleItemDelete : undefined,
-                            onAdd: this.props.onAddToItem,
-                            onSelect: function onSelect(itemId) {
-                                return _this4._handleItemSelected(itemId);
-                            },
-                            onEdit: this.props.onEditItem
-                        });
-                    }, this)
-                ),
-                _react2.default.createElement(_ConfirmationModal2.default, { ref: function ref(_ref3) {
-                        return _this3.confirmDelete = _ref3;
-                    },
-                    title: 'Delete ' + this.props.itemTypeName,
-                    action: 'Are you sure you want to delete this ' + this.props.itemTypeName + '?',
-                    onYes: this._deleteItem })
-            );
-        }
-    }], [{
-        key: 'ListItemWrapperFactory',
-        value: function ListItemWrapperFactory(WrappedComponent) {
-            var classListItem = function (_React$Component2) {
-                _inherits(ListItemWrapper, _React$Component2);
-
-                function ListItemWrapper(props) {
-                    _classCallCheck(this, ListItemWrapper);
-
-                    return _possibleConstructorReturn(this, (ListItemWrapper.__proto__ || Object.getPrototypeOf(ListItemWrapper)).call(this, props));
-                }
-
-                _createClass(ListItemWrapper, [{
-                    key: 'render',
-                    value: function render() {
-                        var _this6 = this;
-
-                        var wrappedProps = Object.assign({}, this.props);
-                        delete wrappedProps["liStyle"];
-                        delete wrappedProps["liClass"];
-                        delete wrappedProps["onSelect"];
-                        return _react2.default.createElement(
-                            'li',
-                            { style: this.props.liStyle,
-                                className: this.props.liClass + ' ' + (this.props.selected ? this.props.selectedClass || 'selected' : ''),
-                                'data-value': this.props.itemId,
-                                onClick: function onClick() {
-                                    if (_this6.props.onSelect) {
-                                        _this6.props.onSelect(_this6.props.itemId);
-                                    }
-                                } },
-                            _react2.default.createElement(WrappedComponent, this.props)
-                        );
-                    }
-                }]);
-
-                return ListItemWrapper;
-            }(_react2.default.Component);
-            return classListItem;
-        }
-    }]);
-
-    return ItemList;
-}(_react2.default.Component);
-
-exports.default = ItemList;
-
-ItemList.defaultProps = {
-    items: [],
-    itemTypeName: "Item",
-    multiSelect: false
-};
-
-},{"./ItemListItem":184,"./modals/ConfirmationModal":187,"react":181}],184:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ItemListItem = function (_React$Component) {
-    _inherits(ItemListItem, _React$Component);
-
-    function ItemListItem(props) {
-        _classCallCheck(this, ItemListItem);
-
-        var _this = _possibleConstructorReturn(this, (ItemListItem.__proto__ || Object.getPrototypeOf(ItemListItem)).call(this, props));
-
-        _this.state = _this._initialState();
-        if (props.itemId === undefined || props.itemId === null) {
-            throw "Property 'itemId' must be defined in ItemListItem";
-        }
-        _this._itemSelected = _this._itemSelected.bind(_this);
-        _this._handleDelete = _this._handleDelete.bind(_this);
-        _this._handleAdd = _this._handleAdd.bind(_this);
-        _this._handleEdit = _this._handleEdit.bind(_this);
-        return _this;
-    }
-
-    _createClass(ItemListItem, [{
-        key: '_itemSelected',
-        value: function _itemSelected() {
-            this.setState({ selected: true });
-            if (this.props.onSelect) this.props.onSelect(this.props.itemId);
-        }
-    }, {
-        key: '_handleDelete',
-        value: function _handleDelete() {
-            if (this.props.onDelete) this.props.onDelete(this.props.itemId);
-        }
-    }, {
-        key: '_handleAdd',
-        value: function _handleAdd() {
-            if (this.props.onAdd) this.props.onAdd(this.props.itemId);
-        }
-    }, {
-        key: '_handleEdit',
-        value: function _handleEdit() {
-            if (this.props.onEdit) this.props.onEdit(this.props.itemId);
-        }
-    }, {
-        key: '_initialState',
-        value: function _initialState() {
-            return { selected: false };
-        }
-    }, {
-        key: '_getButton',
-        value: function _getButton(handler) {
-            var icon = arguments.length <= 1 || arguments[1] === undefined ? 'glyphicon-menu-hamburger' : arguments[1];
-            var addedClasses = arguments.length <= 2 || arguments[2] === undefined ? '' : arguments[2];
-            var tooltip = arguments.length <= 3 || arguments[3] === undefined ? '' : arguments[3];
-
-            return _react2.default.createElement('span', { className: 'ctrl glyphicon ' + icon + ' ' + addedClasses, title: tooltip, onClick: handler });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-
-            var editIcon = this.props.onEdit ? this._getButton(this._handleEdit, 'glyphicon-pencil', 'margin-right-10', 'Edit') : null;
-            var deleteIcon = this.props.onDelete ? this._getButton(this._handleDelete, 'glyphicon-trash', '', 'Delete') : null;
-            var addIcon = this.props.onAdd ? this._getButton(this._handleAdd, 'glyphicon-plus', 'margin-right-10', 'Add To') : null;
-
-            return _react2.default.createElement(
-                'li',
-                { className: this.state.selected ? 'selected' : '', 'data-value': this.props.itemId },
-                _react2.default.createElement(
-                    'span',
-                    { onClick: this._itemSelected,
-                        title: this.props.tooltip,
-                        className: 'ctrl padding-right-10' },
-                    this.props.name
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'inline-block pull-right padding-right-10' },
-                    editIcon,
-                    addIcon,
-                    deleteIcon
-                )
-            );
-        }
-    }, {
-        key: 'itemId',
-        get: function get() {
-            return this.props.itemId;
-        }
-    }, {
-        key: 'selected',
-        get: function get() {
-            return this.state.selected;
-        },
-        set: function set() {
-            var value = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-            this.setState({ selected: value });
-        }
-    }]);
-
-    return ItemListItem;
-}(_react2.default.Component);
-
-exports.default = ItemListItem;
-
-},{"react":181}],185:[function(require,module,exports){
+},{"../objects/rpDeck":193,"./List":185,"./modals/DeckModal":188,"react":181}],185:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22069,8 +21769,13 @@ var List = function (_React$Component2) {
 
         var _this4 = _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this, props));
 
+        _this4.state = {
+            items: _this4.props.items,
+            selectedItems: []
+        };
         _this4._confirmDelete = _this4._confirmDelete.bind(_this4);
         _this4._onDelete = _this4._onDelete.bind(_this4);
+        _this4._itemHandler = _this4._itemHandler.bind(_this4);
         return _this4;
     }
 
@@ -22079,8 +21784,8 @@ var List = function (_React$Component2) {
         value: function render() {
             var _this5 = this;
 
-            var ListItemWrapper = List._ListItemWrapperFactory(this.props.fnBuildItem ? function (props) {
-                return _this5.props.fnBuildItem(props);
+            var ListItemWrapper = List._ListItemWrapperFactory(this.props.buildItem ? function (props) {
+                return _this5.props.buildItem(props);
             } : function (props) {
                 return _react2.default.createElement(ListItem, props);
             });
@@ -22095,21 +21800,28 @@ var List = function (_React$Component2) {
                             return _this5.list = _ref;
                         },
                         className: this.props.className },
-                    this.props.items.map(function (item) {
+                    this.props.items ? this.props.items.map(function (item) {
                         var id = List.getKey(_this5.props, item);
                         var name = List.getName(_this5.props, item);
                         var tooltip = List.getTooltip(_this5.props, item);
 
                         return _react2.default.createElement(ListItemWrapper, {
                             key: id, id: id,
+                            selected: _this5.state.selectedItems.indexOf(id) >= 0,
                             name: name, tooltip: tooltip,
                             item: item, allow: _this5.props.allow,
-                            onSelect: function onSelect(item, id, selected) {
-                                return _this5._onSelect(item, id, selected);
-                            },
-                            itemHandler: _this5.props.itemHandler,
-                            confirmDelete: _this5.props.confirmDelete ? _this5._confirmDelete : undefined });
-                    })
+                            itemHandler: _this5._itemHandler,
+                            itemTooltip: _this5.props.itemTooltip,
+                            itemName: _this5.props.itemName,
+                            itemKey: _this5.props.itemKey
+                        });
+                    }) : _react2.default.createElement(
+                        'span',
+                        null,
+                        'No ',
+                        this.props.type || 'Item',
+                        's exist.'
+                    )
                 ),
                 _react2.default.createElement(_ConfirmationModal2.default, { ref: function ref(_ref2) {
                         return _this5.confirmDelete = _ref2;
@@ -22118,6 +21830,73 @@ var List = function (_React$Component2) {
                     action: 'Are you sure you want to delete this ' + (this.props.type || "Item") + '?',
                     onYes: this._onDelete })
             );
+        }
+    }, {
+        key: '_itemHandler',
+        value: function _itemHandler(command, item, id) {
+            var _this6 = this;
+
+            var handler = this.props.itemHandler ? this.props.itemHandler : function () {
+                return console.log(command + ' no supported by List ' + (_this6.props.name || "Unnammed"));
+            };
+            switch (command) {
+                case '':
+                    return;
+                case "trash":
+                case "delete":
+                case "dispose":
+                    if (this.props.confirmDelete === undefined ? true : this.props.confirmDelete) {
+                        this._confirmDelete(command, item, id);
+                        return;
+                    }
+                    break;
+                case "select":
+                    {
+                        var previous = this.state.selectedItems;
+                        var selectedItems = this.props.multiSelect ? previous : [];
+                        selectedItems.push(id);
+                        this.setState({ selectedItems: selectedItems });
+
+                        var _iteratorNormalCompletion = true;
+                        var _didIteratorError = false;
+                        var _iteratorError = undefined;
+
+                        try {
+                            for (var _iterator = previous[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                                var pId = _step.value;
+
+                                if (this.state.selectedItems.indexOf(pId) < 0) {
+                                    handler('deselect', item, id);
+                                }
+                            }
+                        } catch (err) {
+                            _didIteratorError = true;
+                            _iteratorError = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion && _iterator.return) {
+                                    _iterator.return();
+                                }
+                            } finally {
+                                if (_didIteratorError) {
+                                    throw _iteratorError;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "deselect":
+                    {
+                        var _selectedItems = this.state.selectedItems;
+                        var index = _selectedItems.indexOf(id);
+                        if (index >= 0) _selectedItems.splice(index, 1);
+                        this.setState({ selectedItems: _selectedItems });
+                    }
+                    break;
+                default:
+                    break;
+            }
+            handler(command, item, id);
         }
     }, {
         key: '_confirmDelete',
@@ -22131,14 +21910,9 @@ var List = function (_React$Component2) {
             this.props.itemHandler(command, item, id);
         }
     }, {
-        key: '_onSelect',
-        value: function _onSelect(item, id, selected) {
-            if (this.props.onSelect) this.props.onSelect(item, id, selected);
-        }
-    }, {
         key: '_getAddButton',
         value: function _getAddButton() {
-            var _this6 = this;
+            var _this7 = this;
 
             var allowsAdd = this.props.allow && this.props.allow.split('|').includes('new');
             if (this.props.itemHandler && allowsAdd) {
@@ -22148,7 +21922,7 @@ var List = function (_React$Component2) {
                         onClick: function onClick(event) {
                             event.preventDefault();
                             event.stopPropagation();
-                            _this6.props.itemHandler('new', null, null);
+                            _this7.props.itemHandler('new', null, null);
                         } },
                     'Add ',
                     this.props.itemTypeName
@@ -22176,18 +21950,15 @@ var List = function (_React$Component2) {
                 function ListItemWrapper(props) {
                     _classCallCheck(this, ListItemWrapper);
 
-                    var _this7 = _possibleConstructorReturn(this, (ListItemWrapper.__proto__ || Object.getPrototypeOf(ListItemWrapper)).call(this, props));
-
-                    _this7.state = { selected: _this7.props.selected || false };
-                    return _this7;
+                    return _possibleConstructorReturn(this, (ListItemWrapper.__proto__ || Object.getPrototypeOf(ListItemWrapper)).call(this, props));
                 }
 
                 _createClass(ListItemWrapper, [{
                     key: '_onSelect',
                     value: function _onSelect(event, item, id) {
-                        var selected = !this.state.selected;
-                        this.setState({ selected: selected });
+                        var selected = !this.props.selected;
                         this._itemHandler(event, selected ? 'select' : 'deselect', item, id);
+                        this.ItemId = this.ItemId.bind(this);
                     }
                 }, {
                     key: '_itemHandler',
@@ -22197,44 +21968,42 @@ var List = function (_React$Component2) {
                         if (this.props.itemHandler) {
                             switch (command.trim()) {
                                 case '':
-                                    break;
-                                case "trash":
-                                case "delete":
-                                case "dispose":
-                                    this.props.confirmDelete ? this.props.confirmDelete(command, item, id) : this.props.itemHandler(command, item, id);
-                                    break;
+                                    return;
                                 default:
-                                    this.props.itemHandler(command, item, id);
                                     break;
                             }
+                            this.props.itemHandler(command, item, id);
                         }
                     }
                 }, {
                     key: '_confirmDelete',
                     value: function _confirmDelete(event, command, item, id) {}
                 }, {
+                    key: 'ItemId',
+                    value: function ItemId() {
+                        return this.props.id;
+                    }
+                }, {
                     key: 'render',
                     value: function render() {
-                        var _this8 = this;
+                        var _this9 = this;
 
                         var wrappedProps = Object.assign({}, this.props);
                         delete wrappedProps["liStyle"];
                         delete wrappedProps["liClass"];
-                        delete wrappedProps["onSelect"];
-                        delete wrappedProps["confirmDelete"];
-                        wrappedProps.selected = this.state.selected;
+                        wrappedProps.selected = this.props.selected;
                         wrappedProps["itemHandler"] = function (event, command, item, id) {
-                            return _this8._itemHandler(event, command, item, id);
+                            return _this9._itemHandler(event, command, item, id);
                         };
                         return (
                             // <WrappedComponent {...wrappedProps} />
                             _react2.default.createElement(
                                 'li',
                                 { style: this.props.liStyle,
-                                    className: this.props.liClass + ' ' + (this.state.selected ? this.props.selectedClass || 'selected' : ''),
+                                    className: (this.props.liClass || '') + ' ' + (this.props.selected ? this.props.selectedClass || 'selected' : ''),
                                     'data-value': this.props.id,
                                     onClick: function onClick(event) {
-                                        return _this8._onSelect(event, _this8.props.item, id);
+                                        return _this9._onSelect(event, _this9.props.item, _this9.props.id);
                                     } },
                                 _react2.default.createElement(WrappedComponent, wrappedProps)
                             )
@@ -22249,17 +22018,17 @@ var List = function (_React$Component2) {
     }, {
         key: 'getKey',
         value: function getKey(props, item) {
-            return props.getItemId ? props.getItemId(item) : item.id || item.ID || item.Id || item.key || item.Key || item.itemId || undefined;
+            return props.itemKey ? props.itemKey(item) : item.id || item.ID || item.Id || item.key || item.Key || item.itemId || undefined;
         }
     }, {
         key: 'getName',
         value: function getName(props, item) {
-            return props.getName ? props.getName(item) : item.name || item.Name || undefined;
+            return props.itemName ? props.itemName(item) : item.name || item.Name || undefined;
         }
     }, {
         key: 'getTooltip',
         value: function getTooltip(props, item) {
-            return props.getTooltip ? props.getTooltip(item) : item.tooltip || '';
+            return props.itemTooltip ? props.itemTooltip(item) : item.tooltip || '';
         }
     }]);
 
@@ -22285,6 +22054,10 @@ var _DeckList = require('./DeckList');
 
 var _DeckList2 = _interopRequireDefault(_DeckList);
 
+var _CardList = require('./CardList');
+
+var _CardList2 = _interopRequireDefault(_CardList);
+
 var _rpDeck = require('../objects/rpDeck');
 
 var _rpDeck2 = _interopRequireDefault(_rpDeck);
@@ -22292,14 +22065,6 @@ var _rpDeck2 = _interopRequireDefault(_rpDeck);
 var _AppObject = require('../objects/AppObject');
 
 var _AppObject2 = _interopRequireDefault(_AppObject);
-
-var _ItemList = require('./ItemList');
-
-var _ItemList2 = _interopRequireDefault(_ItemList);
-
-var _List = require('./List');
-
-var _List2 = _interopRequireDefault(_List);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -22319,7 +22084,8 @@ var WorkSpace = function (_React$Component) {
 
         _this.state = {
             appObj: props.appObj,
-            items: [{ id: 1, name: "test" }, { id: 2, name: "oh no" }]
+            selectedDeck: null,
+            selectedCard: null
         };
         _this._deckSelected = _this._deckSelected.bind(_this);
         _this._decksChanged = _this._decksChanged.bind(_this);
@@ -22359,7 +22125,11 @@ var WorkSpace = function (_React$Component) {
                                 onDeckSelected: this._deckSelected,
                                 onDecksChanged: this._decksChanged })
                         ),
-                        _react2.default.createElement('div', { className: 'col-lg-9 col-md-9 col-sm-9' })
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'col-lg-9 col-md-9 col-sm-9', ref: true },
+                            _react2.default.createElement(_CardList2.default, { cards: this.state.selectedDeck ? this.state.selectedDeck.cards : null })
+                        )
                     )
                 )
             );
@@ -22373,8 +22143,11 @@ var WorkSpace = function (_React$Component) {
     }, {
         key: '_deckSelected',
         value: function _deckSelected(deckId) {
-            //rpDeck.selectDeck(this.state.appObj.decks, deckId);
-            this.setState({ appObj: this.state.appObj });
+            var deck = _rpDeck2.default.getDeck(this.state.appObj.decks, deckId);
+            this.setState({
+                selectedDeck: deck,
+                selectedCard: null
+            });
         }
     }]);
 
@@ -22383,7 +22156,7 @@ var WorkSpace = function (_React$Component) {
 
 exports.default = WorkSpace;
 
-},{"../objects/AppObject":190,"../objects/rpDeck":193,"./DeckList":182,"./ItemList":183,"./List":185,"react":181}],187:[function(require,module,exports){
+},{"../objects/AppObject":190,"../objects/rpDeck":193,"./CardList":183,"./DeckList":184,"react":181}],187:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23286,6 +23059,8 @@ var rpDeck = function () {
                     }
                 }
             }
+
+            return null;
         }
     }]);
 

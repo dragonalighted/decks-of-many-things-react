@@ -28,11 +28,12 @@ h4.deckName,h5.deckName, h6.deckName{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-left:5px;
     padding:10px;    
+    border:1px solid transparent; 
+    border-radius:5px;
 }
 
 .deck-list li:hover {
-    border:1px solid yellow; 
-    border-radius:5px;
+    border-color:yellow; 
     cursor:pointer;
 }
 

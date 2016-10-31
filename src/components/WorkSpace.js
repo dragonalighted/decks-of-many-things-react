@@ -1,19 +1,16 @@
 import React from 'react'; 
 import DeckList from './DeckList';
+import CardList from './CardList';
 import rpDeck from '../objects/rpDeck';
 import AppObject from '../objects/AppObject';
-import ItemList from './ItemList';
-import List from './List';
 
 export default class WorkSpace extends React.Component {
     constructor(props){
         super(props);
         this.state = { 
             appObj :props.appObj,
-            items : [
-                {id: 1, name:"test"} ,
-                {id: 2, name:"oh no"}
-            ], 
+            selectedDeck: null,
+            selectedCard: null
             }
         this._deckSelected = this._deckSelected.bind(this);
         this._decksChanged = this._decksChanged.bind(this);
@@ -34,7 +31,8 @@ export default class WorkSpace extends React.Component {
                                 onDeckSelected={this._deckSelected}
                                 onDecksChanged={this._decksChanged} />
                         </div>                        
-                        <div className="col-lg-9 col-md-9 col-sm-9">
+                        <div className="col-lg-9 col-md-9 col-sm-9" ref>
+                            <CardList cards={this.state.selectedDeck ? this.state.selectedDeck.cards : null}/>
                         </div>
                     </div>
                 </div>
@@ -42,13 +40,17 @@ export default class WorkSpace extends React.Component {
         );
     }
     _decksChanged(){
-        AppObject.saveAppObject(this.state.appObj);       
+        AppObject.saveAppObject(this.state.appObj);              
         this.setState({appObj : this.state.appObj});
+   
     }
 
     _deckSelected(deckId){
-        //rpDeck.selectDeck(this.state.appObj.decks, deckId);
-        this.setState({appObj : this.state.appObj});
+        let deck = rpDeck.getDeck(this.state.appObj.decks, deckId);
+        this.setState({            
+            selectedDeck: deck,
+            selectedCard: null
+        });
     }
 } 
 

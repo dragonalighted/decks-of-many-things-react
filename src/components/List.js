@@ -59,14 +59,19 @@ export default class List extends React.Component {
 
     constructor(props){
         super(props);
+        this.state = { 
+            items : this.props.items,
+            selectedItems : [],
+        }
         this._confirmDelete = this._confirmDelete.bind(this);
         this._onDelete = this._onDelete.bind(this);
+        this._itemHandler = this._itemHandler.bind(this); 
     }
 
 
     render(){
-        let ListItemWrapper = List._ListItemWrapperFactory( this.props.fnBuildItem  
-             ? (props) => this.props.fnBuildItem(props)
+        let ListItemWrapper = List._ListItemWrapperFactory( this.props.buildItem  
+             ? (props) => this.props.buildItem(props)
              : (props) => <ListItem {...props} /> );
         return (
             <div>
@@ -75,21 +80,26 @@ export default class List extends React.Component {
                 <ul ref={(ref) => this.list = ref} 
                     className={this.props.className}>
                    {
-                    this.props.items.map((item) => {
-                        let id = List.getKey(this.props, item);  
-                        let name = List.getName(this.props, item); 
-                        let tooltip = List.getTooltip(this.props, item);
+                    this.props.items 
+                     ? this.props.items.map((item) => {
+                            let id = List.getKey(this.props, item);  
+                            let name = List.getName(this.props, item); 
+                            let tooltip = List.getTooltip(this.props, item);
 
-                        return (
-                            <ListItemWrapper 
-                                key={id} id={id}
-                                name={name} tooltip={tooltip}
-                                item={item} allow={this.props.allow}
-                                onSelect={(item, id, selected) => this._onSelect(item, id, selected)}
-                                itemHandler={this.props.itemHandler} 
-                                confirmDelete={this.props.confirmDelete ? this._confirmDelete : undefined }/>
-                            );
-                    })
+                            return (
+                                <ListItemWrapper 
+                                    key={id} id={id}
+                                    selected={this.state.selectedItems.indexOf(id) >= 0}
+                                    name={name} tooltip={tooltip}
+                                    item={item} allow={this.props.allow}
+                                    itemHandler={this._itemHandler} 
+                                    itemTooltip={this.props.itemTooltip}
+                                    itemName={this.props.itemName}
+                                    itemKey={this.props.itemKey}
+                                    />
+                                );
+                        })
+                    :  (<span>No {this.props.type || 'Item'}s exist.</span>)
                 }
 
                 </ul>
@@ -102,6 +112,46 @@ export default class List extends React.Component {
         );
     }
 
+    _itemHandler(command, item, id) {
+        let handler = this.props.itemHandler ? this.props.itemHandler : () => console.log(`${command} no supported by List ${this.props.name || "Unnammed"}`); 
+        switch(command) {
+            case '' : return; 
+            case "trash"  :
+            case "delete" :
+            case "dispose":
+                if (this.props.confirmDelete === undefined ? true : this.props.confirmDelete){
+                    this._confirmDelete(command, item, id)
+                    return; 
+                } 
+                break;
+            case "select":
+                {
+                    let previous = this.state.selectedItems; 
+                    let selectedItems = this.props.multiSelect ? previous : [];
+                    selectedItems.push(id);   
+                    this.setState({selectedItems});
+
+                    for(let pId of previous) {
+                        if(this.state.selectedItems.indexOf(pId) < 0 ) {
+                            handler('deselect', item, id);
+                        }
+                    }
+                }                             
+                break; 
+            case "deselect":
+                {
+                    let selectedItems = this.state.selectedItems; 
+                    let index = selectedItems.indexOf(id); 
+                    if(index >= 0 ) selectedItems.splice(index, 1);
+                    this.setState({selectedItems})
+                }
+                break; 
+            default:  
+                break; 
+        }
+        handler(command, item, id);
+    }
+
     _confirmDelete(command, item, id) {
         this.confirmDelete.setState({key : id, item, command});
         this.confirmDelete.show();   
@@ -109,10 +159,6 @@ export default class List extends React.Component {
 
     _onDelete(command, item, id) {
         this.props.itemHandler(command, item, id);
-    }
-    _onSelect(item, id, selected){
-        if(this.props.onSelect)
-            this.props.onSelect(item, id, selected);    
     }
 
     _getAddButton(){
@@ -141,55 +187,44 @@ export default class List extends React.Component {
 
             constructor(props){
                 super(props);
-                this.state = { selected : this.props.selected || false};
             }
             _onSelect(event, item, id) {
-                let selected = !this.state.selected;
-                this.setState( {selected : selected});
+                let selected = !this.props.selected;
                 this._itemHandler(event, selected ? 'select' : 'deselect', item, id)
+                this.ItemId = this.ItemId.bind(this);
             }
             _itemHandler(event, command, item, id) {
                 event.preventDefault();
                 event.stopPropagation();
                 if(this.props.itemHandler){
                     switch(command.trim()) {                    
-                        case '': break; 
-                        case "trash"  :
-                        case "delete" :
-                        case "dispose":
-                            this.props.confirmDelete 
-                                ? this.props.confirmDelete(command, item, id)
-                                : this.props.itemHandler(command, item, id); 
-                                break;
-                        default: 
-                            this.props.itemHandler(command, item, id);
-                            break;
+                        case '': return; 
+                        default: break;
                     }
-
+                    this.props.itemHandler(command, item, id);
                 }
-
             }
 
             _confirmDelete(event, command, item, id){
 
             }
-
+            ItemId() {
+                return this.props.id;
+            }
             render(){
 
 
                 let wrappedProps = Object.assign({}, this.props);
                 delete wrappedProps["liStyle"];
                 delete wrappedProps["liClass"]; 
-                delete wrappedProps["onSelect"];
-                delete wrappedProps["confirmDelete"];
-                wrappedProps.selected = this.state.selected;                
+                wrappedProps.selected = this.props.selected;                
                 wrappedProps["itemHandler"] = (event, command, item, id) => this._itemHandler(event, command, item, id);
                 return (
                     // <WrappedComponent {...wrappedProps} />
                     <li style={this.props.liStyle} 
-                        className={`${this.props.liClass} ${this.state.selected ? this.props.selectedClass || 'selected':''}`} 
+                        className={`${this.props.liClass||''} ${this.props.selected ? this.props.selectedClass || 'selected':''}`} 
                         data-value={this.props.id}
-                        onClick={(event) => this._onSelect(event, this.props.item, id) }>
+                        onClick={(event) => this._onSelect(event, this.props.item, this.props.id) }>
                             <WrappedComponent {...wrappedProps} />
                     </li>
                 );
@@ -201,13 +236,12 @@ export default class List extends React.Component {
 
 
     static getKey(props, item){
-        return props.getItemId ? props.getItemId(item) : (item.id || item.ID || item.Id || item.key || item.Key || item.itemId || undefined);            
+        return props.itemKey ? props.itemKey(item) : (item.id || item.ID || item.Id || item.key || item.Key || item.itemId || undefined);            
     }
     static getName(props, item) {
-        return props.getName ? props.getName(item) : (item.name || item.Name || undefined);
+        return props.itemName ? props.itemName(item) : (item.name || item.Name || undefined);
     }
-
     static getTooltip(props, item) {
-        return props.getTooltip ? props.getTooltip(item) : (item.tooltip || '');
+        return props.itemTooltip ? props.itemTooltip(item) : (item.tooltip || '');
     }
 }

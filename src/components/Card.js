@@ -4,8 +4,8 @@ export default class Card extends React.Component
 {
     render(){
         return (
-        <div className="card">
-            This is a Card 
+        <div className="card" data-value={this.props.item.id}>
+            {this.props.item.name}
         </div>
         );
     }
