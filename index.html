@@ -4,8 +4,8 @@
         <meta content="utf-8" http-equiv="encoding">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Includes -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>    </head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
         <!-- Application -->
         <link rel="stylesheet" type="text/css" href="./css/workspace.css" />
@@ -13,6 +13,12 @@
         <link rel="stylesheet" type="text/css" href="./css/deck.css" />
         <link rel="stylesheet" type="text/css" href="./css/card.css" />
 
+        <script>
+            $(function(){
+                 $('ul.deck-list').find('li').first().trigger('click');
+            });
+        </script>
+    </head>
     <body>
         <div id="example"> </div>
         <script src="build/bundle.js"></script>

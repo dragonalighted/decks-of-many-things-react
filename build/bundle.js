@@ -21423,7 +21423,7 @@ module.exports = validateDOMNesting;
 module.exports = require('./lib/React');
 
 },{"./lib/React":64}],182:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -21431,9 +21431,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _rpCard = require('../objects/rpCard');
+
+var _rpCard2 = _interopRequireDefault(_rpCard);
+
+var _rpIcon = require('../objects/rpIcon');
+
+var _rpIcon2 = _interopRequireDefault(_rpIcon);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21446,20 +21454,39 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Card = function (_React$Component) {
     _inherits(Card, _React$Component);
 
-    function Card() {
+    function Card(props) {
         _classCallCheck(this, Card);
 
-        return _possibleConstructorReturn(this, (Card.__proto__ || Object.getPrototypeOf(Card)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Card.__proto__ || Object.getPrototypeOf(Card)).call(this, props));
     }
 
     _createClass(Card, [{
-        key: "render",
+        key: 'render',
         value: function render() {
+            return this.props.edit ? this._renderEdit() : this._renderRead();
+        }
+    }, {
+        key: '_renderRead',
+        value: function _renderRead() {
             return _react2.default.createElement(
-                "div",
-                { className: "card", "data-value": this.props.item.id },
-                this.props.item.name
+                'div',
+                { className: 'card', 'data-value': this.card.id },
+                this.card.name
             );
+        }
+    }, {
+        key: '_renderEdit',
+        value: function _renderEdit() {
+            return _react2.default.createElement(
+                'div',
+                { className: 'card', 'data-value': this.card.id },
+                this.card.name
+            );
+        }
+    }, {
+        key: 'card',
+        get: function get() {
+            return this.props.item;
         }
     }]);
 
@@ -21468,7 +21495,7 @@ var Card = function (_React$Component) {
 
 exports.default = Card;
 
-},{"react":181}],183:[function(require,module,exports){
+},{"../objects/rpCard":192,"../objects/rpIcon":194,"react":181}],183:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22711,6 +22738,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _rpIcon = require('./rpIcon');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var rpCard = function () {
@@ -22719,14 +22748,37 @@ var rpCard = function () {
 
         var id = _ref.id;
         var name = _ref.name;
+        var icons = _ref.icons;
+        var colors = _ref.colors;
+        var components = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 
         _classCallCheck(this, rpCard);
 
         this._id = id || -1;
         this.name = name || 'Un-named Card';
+        this._icons = icons || rpCard._defaultIcons();
+        this._colors = colors || rpCard._defaultColors();
     }
 
     _createClass(rpCard, [{
+        key: 'colors',
+        get: function get() {
+            return this._colors;
+        },
+        set: function set() {
+            var value = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            this._colors = rpCard._defaultColors(value);
+        }
+    }, {
+        key: 'icons',
+        get: function get() {
+            return this._icons;
+        },
+        set: function set() {
+            var value = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            this._icons = rpCard._defaultIcons(value);
+        }
+    }, {
         key: 'id',
         get: function get() {
             return this._id;
@@ -22734,7 +22786,30 @@ var rpCard = function () {
     }], [{
         key: 'loadCard',
         value: function loadCard(jsCardObj) {
-            return Object.assign(new rpCard(), jsCardObj);
+            var card = Object.assign(new rpCard(), jsCardObj);
+            card.icons = card.icons;
+            card.colors = card.colors;
+            return card;
+        }
+    }, {
+        key: '_defaultColors',
+        value: function _defaultColors(colors) {
+            colors = colors || {};
+            colors.card = colors.card || 'black';
+            colors.fore = colors.fore || 'white';
+            colors.font = colors.font || 'black';
+            colors.bold = colors.bold || colors.card;
+            colors.thBack = colors.thBack || colors.card;
+            colors.thFore = colors.thFore || colors.fore;
+            return colors;
+        }
+    }, {
+        key: '_defaultIcons',
+        value: function _defaultIcons(icons) {
+            icons = icons || {};
+            icons.title = (0, _rpIcon.rpIconFactory)(icons.title);
+            icons.back = (0, _rpIcon.rpIconFactory)(icons.back);
+            return icons;
         }
     }]);
 
@@ -22743,7 +22818,7 @@ var rpCard = function () {
 
 exports.default = rpCard;
 
-},{}],193:[function(require,module,exports){
+},{"./rpIcon":194}],193:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -23069,4 +23144,45 @@ var rpDeck = function () {
 
 exports.default = rpDeck;
 
-},{"./rpCard":192}]},{},[189]);
+},{"./rpCard":192}],194:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function rpIconFactory() {
+    var icon = arguments.length <= 0 || arguments[0] === undefined ? { type: 'local' } : arguments[0];
+
+    switch (icon.type) {
+        case 'remote':
+            return new rpRemoteIcon(icon.url);
+        case 'local':
+        default:
+            return new rpLocalIcon(icon.category, icon.name);
+    }
+}
+
+var rpLocalIcon = function rpLocalIcon() {
+    var category = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+    var type = arguments.length <= 1 || arguments[1] === undefined ? 'ace' : arguments[1];
+
+    _classCallCheck(this, rpLocalIcon);
+
+    this.category = category;
+    this.type = type;
+};
+
+var rpRemoteIcon = function rpRemoteIcon(url) {
+    _classCallCheck(this, rpRemoteIcon);
+
+    this.url = url;
+};
+
+exports.rpIconFactory = rpIconFactory;
+exports.rpLocalIcon = rpLocalIcon;
+exports.rpRemoteIcon = rpRemoteIcon;
+
+},{}]},{},[189]);
