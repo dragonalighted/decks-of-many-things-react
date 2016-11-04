@@ -32,7 +32,11 @@ export default class WorkSpace extends React.Component {
                                 onDecksChanged={this._decksChanged} />
                         </div>                        
                         <div className="col-lg-9 col-md-9 col-sm-9" ref>
-                            <CardList cards={this.state.selectedDeck ? this.state.selectedDeck.cards : null}/>
+                            <CardList 
+                                cards={this.state.selectedDeck ? this.state.selectedDeck.cards : null}
+                                deck={this.state.selectedDeck}
+                                onCardsChanged={()=>this._cardsChanged()}
+                            />
                         </div>
                     </div>
                 </div>
@@ -45,6 +49,9 @@ export default class WorkSpace extends React.Component {
    
     }
 
+    _cardsChanged(){
+        this._decksChanged();
+    }
     _deckSelected(deckId){
         let deck = rpDeck.getDeck(this.state.appObj.decks, deckId);
         this.setState({            

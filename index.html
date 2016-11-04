@@ -10,12 +10,16 @@
         <!-- Application -->
         <link rel="stylesheet" type="text/css" href="./css/workspace.css" />
         <link rel="stylesheet" type="text/css" href="./css/main.css" />
+        <link rel="stylesheet" type="text/css" href="./css/lists.css" />
         <link rel="stylesheet" type="text/css" href="./css/deck.css" />
         <link rel="stylesheet" type="text/css" href="./css/card.css" />
+        <link rel="stylesheet" type="text/css" href="./css/color-control.css" />
 
         <script>
             $(function(){
-                 $('ul.deck-list').find('li').first().trigger('click');
+                 $('ul.obj-list.decks').find('li').first().trigger('click');
+
+                 $('#card-button').trigger('click');
             });
         </script>
     </head>

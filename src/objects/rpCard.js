@@ -1,17 +1,22 @@
 
 
-import {rpIconFactory, rpLocalIcon, rpRemoteIcon} from './rpIcon'; 
+import {rpIconFactory} from './rpIcon'; 
 
 export default class rpCard {
-    constructor( {id, name, icons, colors } = {}, components = [] ){
+    constructor( {id, name, icons, colors, size } = {}, components = [] ){
         this._id = id || -1; 
-        this.name = name || 'Un-named Card'; 
+        this.name = name || ''; 
         this._icons = icons || rpCard._defaultIcons()
         this._colors = colors || rpCard._defaultColors(); 
+        this._size = size || "poker"; 
+        this._components = components; 
     }
 
+    get components() { return this._components;}
+    set components(value = []) {this.components = value || [];}
 
-
+    get size() { return this._size || "poker"}
+    set size(value = "poker") {this._size = value}
     get colors() { return this._colors }
     set colors(value = {}) { this._colors = rpCard._defaultColors(value); }
 

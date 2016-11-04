@@ -1,0 +1,48 @@
+
+ul.obj-list, ul.obj-list-block {
+    margin:0;
+    padding:15px 8px 8px 10px;
+    list-style-type: none;  
+    color: navy; 
+    font-size:14pt;
+    font-weight: bold; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+} 
+
+ul.obj-list-block {
+    padding: 0px 1em;
+} 
+
+
+ul.obj-list li, ul.obj-list-block li  {
+    margin-left:5px;
+    padding:10px;    
+    border:1px solid transparent; 
+    border-radius:5px;    
+}
+
+ul.obj-list-block li {
+    position:relative; 
+    display:inline-block; 
+    margin:0;
+}
+
+ul.obj-list li:hover, ul.obj-list-block li:hover {
+    border-color:yellow; 
+    cursor:pointer;
+}
+
+
+ul.obj-list span.ctrl:hover, ul.obj-list-block span.ctrl:hover {
+    color: whitesmoke; 
+}
+
+ul.obj-list li.selected, ul.obj-list-block li.selected  {
+    background-color: lightskyblue;
+    border-radius:5px;
+    border:1px solid navajowhite;
+} 
+
+
+

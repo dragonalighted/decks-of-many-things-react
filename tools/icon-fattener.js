@@ -30,7 +30,7 @@ function walk(dir) {
         else {
             category.icons.push({
                 name: fileName.substring(0, fileName.lastIndexOf('.'))
-                , path : filePath
+                , path : `./img/icons/${category.name === 'default'? '' : category.name + '/'}${fileName}`
             })
         }  
     }
@@ -48,6 +48,7 @@ function toIconString(icon) {
 
 let categories = walk(iconFolderPath);
 
+categories.sort(catSort);
 categories.forEach(function(cat) {
     cat.icons.sort(catSort );
 })

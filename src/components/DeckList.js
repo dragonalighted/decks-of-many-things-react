@@ -26,7 +26,7 @@ Tags: ${item.tags.join(', ')}`;
                 <List title="Decks" type="Deck"
                     items={this.props.decks}
                     itemHandler={this._itemHandler} 
-                    className="deck-list greedy"
+                    className="obj-list decks greedy"
                     allow="edit|add|trash|new"
                     confirmDelete="true"
                     itemTooltip={ function(item) { return `${item.desc?   item.desc + '\n\n\t' :''}Tags: ${item.tags.join(', ')}`} }
