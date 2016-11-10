@@ -33,12 +33,15 @@ export default class IconControl extends React.Component {
         );       
     }
 
+
+
+    _updateIcon(event, icon) {
+        this.setState({icon: icon || this.state.icon}); 
+        if(this.props.onChange) this.props.onChange(event);
+    }
+
     _onTypeChange(event){
-        if(this.iconType.value !== this.props.icon.type){
-            this.setState({icon: rpIconFactory( {type:this.iconType.value}) }); 
-        } else {
-            this.setState({icon:this.props.icon});
-        }             
+        this._updateIcon(event,this.iconType.value !== this.props.icon.type ? rpIconFactory( {type:this.iconType.value}) : this.props.icon );
     }
 
     _getSource(){
@@ -47,12 +50,16 @@ export default class IconControl extends React.Component {
     _onIconCatChange(event) {
         this.state.icon.category = this.iconCategory.value; 
         this.state.icon.name = this.state.icon.icons[0].name; 
-        this.setState(this.state.icon); 
-    }
+        this._updateIcon(event);
 
+    }
+    _onIconUrlChange(event) {
+        this.state.icon.url = this.iconUrl.value.trim();
+        this._updateIcon(event); 
+    }
     _onIconNameChange(event) {
         this.state.icon.name = this.iconName.value
-        this.setState(this.state.icon); 
+        this._updateIcon(event);
     }
     _renderIconFields(){
         if(this.state.icon.type === 'remote'){
@@ -62,7 +69,8 @@ export default class IconControl extends React.Component {
                         className="form-control"
                         name="iconUrl"
                         type="text" 
-                        placeholder="http://"/>
+                        placeholder="http://"
+                        onChange={(e) => this._onIconUrlChange(e)} />
                 </div>
              )
         } else {                     

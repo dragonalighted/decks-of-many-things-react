@@ -24193,7 +24193,13 @@ var ColorsControl = function (_React$Component) {
             this.picker.init(color, title, function (c) {
                 _this3.colors[propertyName] = c;
                 _this3.setState({ colors: _this3.colors });
+                _this3.props.onChange(null);
             }, true);
+        }
+    }, {
+        key: 'value',
+        get: function get() {
+            return this.colors;
         }
     }, {
         key: 'colors',
@@ -24787,13 +24793,15 @@ var IconControl = function (_React$Component) {
             );
         }
     }, {
+        key: '_updateIcon',
+        value: function _updateIcon(event, icon) {
+            this.setState({ icon: icon || this.state.icon });
+            if (this.props.onChange) this.props.onChange(event);
+        }
+    }, {
         key: '_onTypeChange',
         value: function _onTypeChange(event) {
-            if (this.iconType.value !== this.props.icon.type) {
-                this.setState({ icon: (0, _rpIcon.rpIconFactory)({ type: this.iconType.value }) });
-            } else {
-                this.setState({ icon: this.props.icon });
-            }
+            this._updateIcon(event, this.iconType.value !== this.props.icon.type ? (0, _rpIcon.rpIconFactory)({ type: this.iconType.value }) : this.props.icon);
         }
     }, {
         key: '_getSource',
@@ -24805,13 +24813,19 @@ var IconControl = function (_React$Component) {
         value: function _onIconCatChange(event) {
             this.state.icon.category = this.iconCategory.value;
             this.state.icon.name = this.state.icon.icons[0].name;
-            this.setState(this.state.icon);
+            this._updateIcon(event);
+        }
+    }, {
+        key: '_onIconUrlChange',
+        value: function _onIconUrlChange(event) {
+            this.state.icon.url = this.iconUrl.value.trim();
+            this._updateIcon(event);
         }
     }, {
         key: '_onIconNameChange',
         value: function _onIconNameChange(event) {
             this.state.icon.name = this.iconName.value;
-            this.setState(this.state.icon);
+            this._updateIcon(event);
         }
     }, {
         key: '_renderIconFields',
@@ -24828,7 +24842,10 @@ var IconControl = function (_React$Component) {
                         className: 'form-control',
                         name: 'iconUrl',
                         type: 'text',
-                        placeholder: 'http://' })
+                        placeholder: 'http://',
+                        onChange: function onChange(e) {
+                            return _this3._onIconUrlChange(e);
+                        } })
                 );
             } else {
                 return _react2.default.createElement(
@@ -24969,6 +24986,7 @@ var CardModal = function (_React$Component) {
         _this._onCancel = _this._onCancel.bind(_this);
         _this._onSave = _this._onSave.bind(_this);
         _this._onCardContentsChanged = _this._onCardContentsChanged.bind(_this);
+        _this._onChange = _this._onChange.bind(_this);
         return _this;
     }
 
@@ -25013,7 +25031,7 @@ var CardModal = function (_React$Component) {
                         return _this2._onShow();
                     },
                     closeOnClick: false,
-                    modalStyle: { width: '100%', minWidth: '800px', height: "600px;" }
+                    modalStyle: { width: '100%', minWidth: '800px', height: "600px" }
                 },
                 _react2.default.createElement(
                     'div',
@@ -25045,10 +25063,15 @@ var CardModal = function (_React$Component) {
                                 _FormGroup2.default,
                                 { name: 'name', required: 'true', label: 'Name' },
                                 _react2.default.createElement('input', { type: 'text', placeholder: 'Card Name',
-                                    defaultValue: this.card.name, ref: function ref(input) {
+                                    defaultValue: this.card.name,
+                                    ref: function ref(input) {
                                         return _this2.cardName = input;
                                     },
-                                    'data-prop': 'name' })
+                                    onChange: function onChange(e) {
+                                        return _this2._onChange(e, _this2.cardName, function (item, value) {
+                                            return item.name = value;
+                                        });
+                                    } })
                             ),
                             _react2.default.createElement(
                                 _FormGroup2.default,
@@ -25060,7 +25083,9 @@ var CardModal = function (_React$Component) {
                                         }, 'data-prop': 'size',
                                         value: this.card.size,
                                         onChange: function onChange(e) {
-                                            return _this2.onSizeChange(e);
+                                            return _this2._onChange(e, _this2.cardSize, function (item, value) {
+                                                return item.size = value;
+                                            });
                                         } },
                                     _react2.default.createElement(
                                         'option',
@@ -25097,7 +25122,13 @@ var CardModal = function (_React$Component) {
                                         return _this2.cardTitleIcon = _ref;
                                     },
                                     icon: this.card.icons.title,
-                                    color: this.card.colors.card })
+                                    color: this.card.colors.card,
+                                    onChange: function onChange(e) {
+                                        return _this2._onChange(e, _this2.cardTitleIcon, function (item, value) {
+                                            return item.icons.title = value;
+                                        });
+                                    }
+                                })
                             ),
                             _react2.default.createElement(
                                 _FormGroup2.default,
@@ -25107,7 +25138,13 @@ var CardModal = function (_React$Component) {
                                         return _this2.cardBackIcon = _ref2;
                                     },
                                     icon: this.card.icons.back,
-                                    color: this.card.colors.card })
+                                    color: this.card.colors.card,
+                                    onChange: function onChange(e) {
+                                        return _this2._onChange(e, _this2.cardTitleIcon, function (item, value) {
+                                            return item.icons.title = value;
+                                        });
+                                    }
+                                })
                             ),
                             _react2.default.createElement(
                                 _FormGroup2.default,
@@ -25116,7 +25153,13 @@ var CardModal = function (_React$Component) {
                                     ref: function ref(_ref3) {
                                         return _this2.cardColors = _ref3;
                                     },
-                                    colors: this.card.colors })
+                                    colors: this.card.colors,
+                                    onChange: function onChange(e) {
+                                        return _this2._onChange(e, _this2.cardColors, function (item, value) {
+                                            return item.colors = value;
+                                        });
+                                    }
+                                })
                             )
                         )
                     ),
@@ -25169,8 +25212,17 @@ var CardModal = function (_React$Component) {
             );
         }
     }, {
-        key: '_onSizeChange',
-        value: function _onSizeChange(event) {}
+        key: '_onChange',
+        value: function _onChange(event, ref, propSetter) {
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+            if (propSetter) {
+                propSetter(this.card, ref.value);
+                this.CardPreview.setCard(this.card);
+            }
+        }
     }, {
         key: '_onShow',
         value: function _onShow() {

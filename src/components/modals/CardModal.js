@@ -30,6 +30,7 @@ export default class CardModal extends React.Component{
         this._onCancel = this._onCancel.bind(this);
         this._onSave = this._onSave.bind(this);
         this._onCardContentsChanged = this._onCardContentsChanged.bind(this);
+        this._onChange = this._onChange.bind(this); 
     }    
     setCard(card = new rpCard()) { this.setState({card}); }
     show(){ this.modal.show(); }
@@ -52,7 +53,7 @@ export default class CardModal extends React.Component{
             <OutlineModal ref={(modal) => this.modal = modal} 
                 onShow={() => this._onShow()}
                 closeOnClick={false}
-                modalStyle= {{width: '100%', minWidth:'800px', height:"600px;"}}
+                modalStyle= {{width: '100%', minWidth:'800px', height:"600px"}}
                 >                
                 <div className="modal-container row">
                     <div className="col-md-12">
@@ -68,13 +69,14 @@ export default class CardModal extends React.Component{
                                 controlSize="col-md-10">                            
                             <FormGroup name="name" required="true" label="Name">
                                 <input  type="text" placeholder="Card Name" 
-                                        defaultValue={this.card.name} ref={(input) => this.cardName = input} 
-                                        data-prop="name"/>                            
+                                        defaultValue={this.card.name} 
+                                        ref={(input) => this.cardName = input} 
+                                        onChange={(e) => this._onChange(e, this.cardName, (item, value) => item.name = value )} />                            
                             </FormGroup>
                             <FormGroup name="size" required="true" label="Size">
                                 <select  ref={(input) => this.cardSize = input} data-prop="size"
                                         value={this.card.size}
-                                        onChange={(e)=> this.onSizeChange(e)}>
+                                        onChange={(e)=> this._onChange(e, this.cardSize, (item, value) => item.size = value)}>
                                     <option value='poker'       >Poker     (2.5"  x 3.5")</option>
                                     <option value='bridge'      >Bridge    (2.25" x 3.5")</option>
                                     <option value='index-sm'    >Small Index (5"    x 3")</option>
@@ -86,18 +88,24 @@ export default class CardModal extends React.Component{
                                 <IconControl
                                     ref={(ref) => this.cardTitleIcon = ref} 
                                     icon={this.card.icons.title} 
-                                    color={this.card.colors.card}/>
+                                    color={this.card.colors.card}
+                                    onChange={(e) => this._onChange(e, this.cardTitleIcon, (item, value) => item.icons.title = value) }
+                                />
                             </FormGroup>
                             <FormGroup name="front-icon" label="Back" >
                                 <IconControl
                                     ref={(ref) => this.cardBackIcon = ref}  
                                     icon={this.card.icons.back}  
-                                    color={this.card.colors.card} />
+                                    color={this.card.colors.card} 
+                                    onChange={(e) => this._onChange(e, this.cardTitleIcon, (item, value) => item.icons.title = value) }
+                                />                               
                             </FormGroup>
                             <FormGroup name="colors" label="Colors">
                                 <ColorsControl
                                     ref={(ref) => this.cardColors = ref} 
-                                    colors={this.card.colors}/>
+                                    colors={this.card.colors}
+                                    onChange={(e) => this._onChange(e, this.cardColors, (item, value) => item.colors = value )}
+                                    />
                             </FormGroup>
                         </Form>
                     </div>
@@ -127,8 +135,15 @@ export default class CardModal extends React.Component{
         );
     }
 
-    _onSizeChange(event) {
-
+    _onChange(event, ref , propSetter){
+        if(event){
+            event.stopPropagation();
+            event.preventDefault();
+        } 
+        if(propSetter) {
+            propSetter(this.card, ref.value);
+            this.CardPreview.setCard(this.card);
+        }
     }
     _onShow(){ this.cardName.focus(); }
 

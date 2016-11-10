@@ -9,7 +9,7 @@ export default class ColorsControl extends React.Component {
         super(props);
         this.state = { colors: Object.assign({}, this.props.colors)}
     }
-
+    get value() {return this.colors ;}
     get colors(){ return this.state.colors; }
     render(){
         return (
@@ -48,7 +48,8 @@ export default class ColorsControl extends React.Component {
     _handleClick(color, title, propertyName){
         this.picker.init(color, title, (c) => {
             this.colors[propertyName] = c
-            this.setState({colors: this.colors}) 
+            this.setState({colors: this.colors})
+            this.props.onChange(null)
         } , true );
     }
 
