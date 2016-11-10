@@ -5,7 +5,7 @@ export default class Form extends React.Component {
 
     render(){
         return (
-            <form className={`${this.props.horizontal?'form-horizontal':''} ${this.props.className||''}`}>
+            <form className={`${this.props.horizontal?'form-horizontal':''} ${this.props.className||''}`} style={this.props.style || {}}>
                 {
                     React.Children.map(this.props.children, (child) =>{
                         if(child.type === FormGroup){

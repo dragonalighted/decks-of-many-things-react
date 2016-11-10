@@ -35,7 +35,8 @@ export default class WorkSpace extends React.Component {
                             <CardList 
                                 cards={this.state.selectedDeck ? this.state.selectedDeck.cards : null}
                                 deck={this.state.selectedDeck}
-                                onCardsChanged={()=>this._cardsChanged()}
+                                onCardsChanged={()=>this._cardsChanged()} 
+                                showControls={true}
                             />
                         </div>
                     </div>

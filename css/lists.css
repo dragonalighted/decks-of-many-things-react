@@ -15,20 +15,20 @@ ul.obj-list-block {
 } 
 
 
-ul.obj-list li, ul.obj-list-block li  {
+ul.obj-list > li, ul.obj-list-block > li  {
     margin-left:5px;
     padding:10px;    
     border:1px solid transparent; 
     border-radius:5px;    
 }
 
-ul.obj-list-block li {
+ul.obj-list-block > li {
     position:relative; 
     display:inline-block; 
     margin:0;
 }
 
-ul.obj-list li:hover, ul.obj-list-block li:hover {
+ul.obj-list > li:hover, ul.obj-list-block > li:hover {
     border-color:yellow; 
     cursor:pointer;
 }
@@ -38,7 +38,7 @@ ul.obj-list span.ctrl:hover, ul.obj-list-block span.ctrl:hover {
     color: whitesmoke; 
 }
 
-ul.obj-list li.selected, ul.obj-list-block li.selected  {
+ul.obj-list > li.selected, ul.obj-list-block > li.selected  {
     background-color: lightskyblue;
     border-radius:5px;
     border:1px solid navajowhite;

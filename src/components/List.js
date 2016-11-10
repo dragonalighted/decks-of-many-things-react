@@ -1,5 +1,6 @@
 import React from 'react'; 
 import ConfirmationModal from './modals/ConfirmationModal';
+import ControlButton from './ControlButton';
 
 class ListItem extends React.Component {
     render(){
@@ -31,23 +32,26 @@ class ListItem extends React.Component {
         if(this.props.allow){
             let allowedControls = this.props.allow.split('|');
             if(allowedControls.includes('edit'))
-                controls.edit = this._getButton('edit', 'glyphicon-pencil', 'margin-right-10', 'Edit');
+                controls.edit = this._getButton('edit', null, 'margin-right-10', 'Edit');
             if(allowedControls.includes('delete') || allowedControls.includes('trash'))
-                controls.trash = this._getButton('trash','glyphicon-trash', '', 'Trash');
+                controls.trash = this._getButton('trash', null,  '', 'Trash');
             if(allowedControls.includes('add') || allowedControls.includes('addTo'))
-                controls.add = this._getButton('addTo','glyphicon-plus', 'margin-right-10', 'Add To');
+                controls.add = this._getButton('addTo', null, 'margin-right-10', 'Add To');
         }
 
         return controls; 
     }
 
-    _getButton(command, icon = 'glyphicon-menu-hamburger', addedClasses = '', tooltip = '') {
+    _getButton(command, icon , addedClasses = '', tooltip = '') {
         return (
-            <span 
-                className={`ctrl glyphicon ${icon} ${addedClasses}`} 
-                title={tooltip} 
-                onClick={(event) => this.props.itemHandler(event, command, this.props.item, this.props.id)}>
-            </span>
+            <ControlButton 
+                className={addedClasses} 
+                icon={icon} 
+                command={command} 
+                tooltip={tooltip} 
+                itemHandler={this.props.itemHandler} 
+                item={this.props.item} 
+                id={this.props.id}/>
         );
     }
 

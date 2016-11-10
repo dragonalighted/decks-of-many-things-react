@@ -7,7 +7,7 @@ export default class Icon extends React.Component {
 
     render() {
         return (
-            <img className="icon" src={ this.props.icon.url } /> 
+            <img className="icon" src={ this.props.icon.url } style={this.props.style || {}}/> 
         ); 
     }
 }

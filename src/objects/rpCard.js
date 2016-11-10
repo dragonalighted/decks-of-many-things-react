@@ -3,7 +3,7 @@
 import {rpIconFactory} from './rpIcon'; 
 
 export default class rpCard {
-    constructor( {id, name, icons, colors, size } = {}, components = [] ){
+    constructor( {id, name, icons, colors, size } = {}, components = "" ){
         this._id = id || -1; 
         this.name = name || ''; 
         this._icons = icons || rpCard._defaultIcons()
@@ -13,7 +13,7 @@ export default class rpCard {
     }
 
     get components() { return this._components;}
-    set components(value = []) {this.components = value || [];}
+    set components(value = "") {this._components = value || "";}
 
     get size() { return this._size || "poker"}
     set size(value = "poker") {this._size = value}

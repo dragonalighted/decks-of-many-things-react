@@ -3,7 +3,7 @@ import List from './List';
 import DeckModal from './modals/DeckModal';
 
 import rpDeck from '../objects/rpDeck';
-
+import rpCard from '../objects/rpCard';
 
 export default class DeckList extends React.Component {
 
@@ -58,7 +58,10 @@ Tags: ${item.tags.join(', ')}`;
                 this.dlgNewDeck.show();
                 break; 
             case 'deselect' : 
-            case 'add' : 
+            case 'addTo' :
+                let card = new rpCard(); 
+                item.addCard(card);
+                this.props.onDecksChanged(); 
                 break;
             case 'select' : 
                 this.props.onDeckSelected(id);

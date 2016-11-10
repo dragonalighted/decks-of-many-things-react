@@ -54,7 +54,8 @@ export default class rpDeck {
             if(value.id > max)
                 max = value.id; 
         }
-        this._cards.push(Object.assign({}, new rpCard(max), card, { _id : max})); 
+        max++;
+        this._cards.push(Object.assign( new rpCard(max), card, { _id : max})); 
     }
 
     removeCard(card){

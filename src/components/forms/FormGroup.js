@@ -9,7 +9,7 @@ export default class FormGroup extends React.Component{
 
     render(){
         return(
-            <div className={`form-group ${this.props.required ? 'required':''}`}>
+            <div className={`form-group ${this.props.required ? 'required':''} ${this.props.className||''}`} style={this.props.style||{}} >
                 <label  className={`control-label ${this.props.labelSize}`} 
                         name={this.props.name} > 
                     {this.props.label}

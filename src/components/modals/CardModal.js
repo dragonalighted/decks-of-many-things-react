@@ -6,6 +6,18 @@ import Form from '../forms/Form';
 import FormGroup from '../forms/FormGroup';
 import IconControl from '../forms/IconControl';
 import ColorsControl from '../forms/ColorsControl'; 
+import CardContentsControl from '../forms/CardContentsControl';
+import Card from '../Card';
+
+// For todays date;
+Date.prototype.today = function () { 
+    return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
+}
+
+// For the time now
+Date.prototype.timeNow = function () {
+     return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
+}
 
 export default class CardModal extends React.Component{
     constructor(props){
@@ -17,6 +29,7 @@ export default class CardModal extends React.Component{
 
         this._onCancel = this._onCancel.bind(this);
         this._onSave = this._onSave.bind(this);
+        this._onCardContentsChanged = this._onCardContentsChanged.bind(this);
     }    
     setCard(card = new rpCard()) { this.setState({card}); }
     show(){ this.modal.show(); }
@@ -28,16 +41,18 @@ export default class CardModal extends React.Component{
             errors: [],
             warnings: [],
             info: [],
+            success: []
         };
     }
 
     get card(){return this.state.card }
+    set card(card = new rpCard()) { this.setCard(card) ;}
     render(){      
         return(
             <OutlineModal ref={(modal) => this.modal = modal} 
                 onShow={() => this._onShow()}
                 closeOnClick={false}
-                modalStyle= {{width: '80%', minWidth:'800px'}}
+                modalStyle= {{width: '100%', minWidth:'800px', height:"600px;"}}
                 >                
                 <div className="modal-container row">
                     <div className="col-md-12">
@@ -45,17 +60,18 @@ export default class CardModal extends React.Component{
                     </div>
                     <div className="col-md-12">
                     {this._getErrors()}
+                    {this._getSuccess()}
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <Form   horizontal={true} 
-                                labelSize="col-md-3"
-                                controlSize="col-md-8">                            
-                            <FormGroup name="name" required="true" label="Card Name">
+                                labelSize="col-md-2"
+                                controlSize="col-md-10">                            
+                            <FormGroup name="name" required="true" label="Name">
                                 <input  type="text" placeholder="Card Name" 
                                         defaultValue={this.card.name} ref={(input) => this.cardName = input} 
                                         data-prop="name"/>                            
                             </FormGroup>
-                            <FormGroup name="size" required="true" label="Card Size">
+                            <FormGroup name="size" required="true" label="Size">
                                 <select  ref={(input) => this.cardSize = input} data-prop="size"
                                         value={this.card.size}
                                         onChange={(e)=> this.onSizeChange(e)}>
@@ -83,17 +99,30 @@ export default class CardModal extends React.Component{
                                     ref={(ref) => this.cardColors = ref} 
                                     colors={this.card.colors}/>
                             </FormGroup>
-                            <div className="pull-right" style={{marginRight: '2em', marginTop: '1em'}}>
-                                <button type="button" className="btn btn-default" onClick={this._onCancel}>Cancel</button>
-                                <button type="submit" className="btn btn-success" onClick={this._onSave}>Save</button>
-                            </div>
                         </Form>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
+                        <Form   horizontal={true}
+                                labelSize="col-md-2"
+                                controlSize="col-md-10">
+                            <FormGroup name="contents" label="Contents">
+                                <CardContentsControl 
+                                    ref={(ref) => this.CardContents = ref}
+                                    contents={this.card.components} 
+                                    onContentsChanged={this._onCardContentsChanged}/>
+                            </FormGroup> 
+                        </Form>
                     </div>
-                    <div className="col-md-4">
-                    </div>
+                    <div className="col-md-6" style={{overflow:'auto', minHeight:'150px',  maxHeight:"600px"}}>                        
+                        <Card item={this.card} ref={(ref) => this.CardPreview = ref} back={false}/>
+                    </div>                    
                 </div> 
+                <div className="row" style={{paddingBottom:'25px', borderTop: '1px solid navy', width:'90%', marginLeft: '5%'}}>
+                    <div className="pull-right" style={{marginRight: '37%', marginTop: '1em'}}>
+                        <button type="button" className="btn btn-md btn-default" onClick={this._onCancel}>Cancel</button>
+                        <button type="submit" className="btn btn-md btn-success" onClick={this._onSave}>Save</button>
+                    </div>
+                </div>
             </OutlineModal>
         );
     }
@@ -116,14 +145,36 @@ export default class CardModal extends React.Component{
         }        
     }
 
+    _getSuccess() {
+        if(this.state.success != null && this.state.success.length > 0  ) {
+            return (
+                <div className="alert alert-success">
+                    <ul>
+                        {this.state.success.map(function(value, index){return (<li>{value}</li>)})}                  
+                    </ul>
+                </div>
+            );
+        }
+    }
+
+    _onCardContentsChanged(contents) {
+        console.log(`contents: ${contents}`);
+        let card = Object.assign(new rpCard(), this.card);
+        card.components = contents;
+        this.CardPreview.setCard(card);
+        //this.card = card; 
+
+    }
     _onCancel(event){
         event.preventDefault();
+        event.stopPropagation(); 
         if(this.props.onCancel) this.props.onCancel();
         this.hide(); 
     }
 
     _onSave(event){
         event.preventDefault();
+        event.stopPropagation(); 
         let errors = []; 
         if(!this.cardName.value || this.cardName.value.trim() === "")
         {   
@@ -136,10 +187,14 @@ export default class CardModal extends React.Component{
                 this.card.name = this.cardName.value;
                 this.card.size = this.cardSize.value;
                 this.card.icons.title = this.cardTitleIcon.value;
-                this.card.icons.back = this.cardBackIcon.value; 
-                this.props.onSave(this.card);
+                this.card.icons.back = this.cardBackIcon.value;
+                this.card.components = this.CardContents.inputContents;
+                if(this.props.onSave(this.card)){
+                    this.setState({success: [`Successfully saved card! ${new Date().today()} @ ${new Date().timeNow()}`]})
+                }
+                
             }
-            this.hide()
+
         }
     }
 }
