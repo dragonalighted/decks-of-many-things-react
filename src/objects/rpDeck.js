@@ -71,6 +71,16 @@ export default class rpDeck {
         return ret; 
     }
 
+    replaceCard(card) {
+        for(let cardIndex = 0; cardIndex < this._cards.length; cardIndex++) {
+            let value = this._cards[cardIndex]; 
+            if(value.id === card.id) {
+                this._cards[cardIndex] = card;
+                return;  
+            }
+        }
+        this.addCard(card);
+    }
     merge(rpDeck){
         return Object.assign(this, rpDeck);
     }

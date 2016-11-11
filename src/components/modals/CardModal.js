@@ -1,6 +1,7 @@
 import React from 'react';
 import OutlineModal from 'boron/OutlineModal';
 import rpCard from '../../objects/rpCard';
+import messageGroup from '../../objects/messageGroup';
 
 import Form from '../forms/Form';
 import FormGroup from '../forms/FormGroup';
@@ -32,22 +33,26 @@ export default class CardModal extends React.Component{
         this._onCardContentsChanged = this._onCardContentsChanged.bind(this);
         this._onChange = this._onChange.bind(this); 
     }    
-    setCard(card = new rpCard()) { this.setState({card}); }
+    setCard(card = new rpCard(), clearMessages = false) { 
+        card = Object.assign(new rpCard(), card);  
+        this.setState({card});
+        if(clearMessages) this.clearMessages();
+    }
+    clearMessages(){ this.setState({messages: new messageGroup({})}); }
     show(){ this.modal.show(); }
     hide(){ this.modal.hide(); }
 
     initialState(){
         return {
             card : new rpCard(),
-            errors: [],
-            warnings: [],
-            info: [],
-            success: []
+            messages: new messageGroup({})
         };
     }
 
     get card(){return this.state.card }
-    set card(card = new rpCard()) { this.setCard(card) ;}
+    set card(card = new rpCard()) {
+        this.setCard(card) ;
+    }
     render(){      
         return(
             <OutlineModal ref={(modal) => this.modal = modal} 
@@ -75,7 +80,7 @@ export default class CardModal extends React.Component{
                             </FormGroup>
                             <FormGroup name="size" required="true" label="Size">
                                 <select  ref={(input) => this.cardSize = input} data-prop="size"
-                                        value={this.card.size}
+                                        defaultValue={this.card.size}
                                         onChange={(e)=> this._onChange(e, this.cardSize, (item, value) => item.size = value)}>
                                     <option value='poker'       >Poker     (2.5"  x 3.5")</option>
                                     <option value='bridge'      >Bridge    (2.25" x 3.5")</option>
@@ -149,11 +154,11 @@ export default class CardModal extends React.Component{
 
     _getErrors(){
 
-        if(this.state.errors != null && this.state.errors.length > 0) {
+        if(this.state.messages.errors != null && this.state.messages.errors.length > 0) {
             return (
                 <div className="alert alert-danger">
                     <ul>
-                    {this.state.errors.map(function(value, index){return (<li>{value}</li>)})}                  
+                    {this.state.messages.errors.map(function(value, index){return (<li>{value}</li>)})}                  
                     </ul>
                 </div>
             );
@@ -161,11 +166,11 @@ export default class CardModal extends React.Component{
     }
 
     _getSuccess() {
-        if(this.state.success != null && this.state.success.length > 0  ) {
+        if(this.state.messages.success != null && this.state.messages.success.length > 0  ) {
             return (
                 <div className="alert alert-success">
                     <ul>
-                        {this.state.success.map(function(value, index){return (<li>{value}</li>)})}                  
+                        {this.state.messages.success.map(function(value, index){return (<li>{value}</li>)})}                  
                     </ul>
                 </div>
             );
@@ -174,11 +179,8 @@ export default class CardModal extends React.Component{
 
     _onCardContentsChanged(contents) {
         console.log(`contents: ${contents}`);
-        let card = Object.assign(new rpCard(), this.card);
-        card.components = contents;
-        this.CardPreview.setCard(card);
-        //this.card = card; 
-
+        this.card.components = contents;
+        this.CardPreview.setCard(this.card);
     }
     _onCancel(event){
         event.preventDefault();
@@ -190,26 +192,21 @@ export default class CardModal extends React.Component{
     _onSave(event){
         event.preventDefault();
         event.stopPropagation(); 
-        let errors = []; 
+        let msgs = new messageGroup({}); 
         if(!this.cardName.value || this.cardName.value.trim() === "")
         {   
-            errors.push('A Card name must be provided!');
+            msgs.errors.push('A Card name must be provided!');
         }
 
-        this.setState({errors});
-        if(errors.length <= 0){
-            if(this.props.onSave) {  
-                this.card.name = this.cardName.value;
-                this.card.size = this.cardSize.value;
-                this.card.icons.title = this.cardTitleIcon.value;
-                this.card.icons.back = this.cardBackIcon.value;
-                this.card.components = this.CardContents.inputContents;
-                if(this.props.onSave(this.card)){
-                    this.setState({success: [`Successfully saved card! ${new Date().today()} @ ${new Date().timeNow()}`]})
-                }
-                
+        if(msgs.errors.length <= 0){
+            if(this.props.onSave) { 
+                let card = Object.assign(new rpCard(), this.card);   
+                if(this.props.onSave(card)){
+                    msgs.success.push(`Successfully saved card! ${new Date().today()} @ ${new Date().timeNow()}`);
+                }                
             }
-
         }
+
+        this.setState({messages: msgs});
     }
 }

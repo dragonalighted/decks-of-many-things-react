@@ -21,6 +21,7 @@ export default class CardList extends React.Component {
                     items={this.props.cards}
                     itemHandler={this._itemHandler}
                     buildItem={ (props) => this._buildCard(props)}
+                    multiSelect={true}
                 />
 
                 <CardModal ref={(ref) => this.dlgAddEditCard = ref} 
@@ -31,14 +32,16 @@ export default class CardList extends React.Component {
     }
 
     _buildCard(props) {
-        return ( <Card {...props} showControls={this.props.showControls} /> );
+        return ( <Card {...props} showControls={this.props.showControls} onDoubleClick={(e) => this._itemHandler('edit', props.item, props.id)}/> );
     }
     _onSaveCard(card) {
         if(card.id <= 0) {
             this.props.deck.addCard(card);
-       }
-       this.props.onCardsChanged(); 
-       return true;
+        } else {
+            this.props.deck.replaceCard(card);
+        }
+        this.props.onCardsChanged(); 
+        return true;
     }
 
     _onDeleteCard(card) {
@@ -51,7 +54,7 @@ export default class CardList extends React.Component {
         switch(command) {
             case 'edit' : 
                 let card = Object.assign(new rpCard(), item);          
-                this.dlgAddEditCard.setCard(item);
+                this.dlgAddEditCard.setCard(card, true);
                 this.dlgAddEditCard.show(); 
                 break; 
             case 'delete' :
