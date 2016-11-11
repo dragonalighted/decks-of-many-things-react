@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "test",
+    "icon": "node ./tools/icon-fattener.js",
     "build": "npm run browserify",
     "browserify": "browserify  -t [ babelify --presets [es2015 react] ]  src/index.js -o build/bundle.js",
     "watch": "watchify  -t [ babelify --presets [es2015 react] ]  src/index.js -o build/bundle.js -v"
@@ -29,6 +30,7 @@
     "babelify": "^7.3.0",
     "boron": "^0.2.3",
     "jquery": "^3.1.1",
+    "marked": "^0.3.6",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
   },

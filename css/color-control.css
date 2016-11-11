@@ -1,0 +1,76 @@
+
+.colors-control td , .colors-control th{
+    text-align: center;
+    padding: 0px 10px; 
+    font-size:smaller;
+    width:90px;
+}
+.color-control {
+    display:inline-block;
+    vertical-align: top;
+}
+.color-control-swatch{
+    position:relative; 
+    border:1px solid black;
+    border-radius: 3px; 
+    margin:5px;
+    display:inline-block;
+    width:55px;
+    height:55px;
+}
+
+.color-control-swatch-label{
+    position:relative;
+    top:5px;
+    font-size:10pt;
+    font-family:Courier New, Courier, monospace;
+    text-align: center;
+    color:white;
+    text-shadow: 
+        -1px 0 black,        0 1px black,        1px 0 black,        0 -1px black,
+        -1px 0 black,        0 1px black,        1px 0 black,        0 -1px black,
+        -1px 0 black,        0 1px black,        1px 0 black,        0 -1px black
+    ;
+}
+
+.color-control-picker {
+    position: absolute;
+    background-color: darkgray;
+    color: #fff;
+    visibility: hidden;
+    width: 700%; 
+    height: 300%;
+    border:1px black solid; 
+    border-radius: 3px;
+    text-align: left;
+    padding: 8px 0;
+    z-index: 5;
+    bottom: 115%;
+    left: -300%;
+    margin-left: 0;
+
+}
+.color-control-picker::after, .color-control-picker.above::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.color-control-picker.show {
+    visibility: visible; 
+}
+
+.color-picker-swatch{
+    display: inline-block;
+    position:relative;
+    width:20px;
+    height:20px;
+    border-radius: 3px;
+    border:1px solid black;
+    margin:2px;
+}

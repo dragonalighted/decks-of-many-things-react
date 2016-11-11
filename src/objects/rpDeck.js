@@ -54,7 +54,8 @@ export default class rpDeck {
             if(value.id > max)
                 max = value.id; 
         }
-        this._cards.push(Object.assign({}, new rpCard(max), card, { _id : max})); 
+        max++;
+        this._cards.push(Object.assign( new rpCard(max), card, { _id : max})); 
     }
 
     removeCard(card){
@@ -70,6 +71,16 @@ export default class rpDeck {
         return ret; 
     }
 
+    replaceCard(card) {
+        for(let cardIndex = 0; cardIndex < this._cards.length; cardIndex++) {
+            let value = this._cards[cardIndex]; 
+            if(value.id === card.id) {
+                this._cards[cardIndex] = card;
+                return;  
+            }
+        }
+        this.addCard(card);
+    }
     merge(rpDeck){
         return Object.assign(this, rpDeck);
     }
@@ -138,6 +149,7 @@ export default class rpDeck {
                 return deck;
             }
         }
+        return null;
     }
 }
 
