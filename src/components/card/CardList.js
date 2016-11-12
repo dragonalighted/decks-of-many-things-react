@@ -1,15 +1,18 @@
 import React from 'react';
-import List from './List';
+import List from '../List';
 import Card from './Card';
-import CardModal from './modals/CardModal';
+import CardModal from '../modals/CardModal';
+import CardEditor from './CardEditor';
 
-
-import rpDeck from '../objects/rpDeck';
-import rpCard from '../objects/rpCard';
+import rpDeck from '../../objects/rpDeck';
+import rpCard from '../../objects/rpCard';
 
 export default class CardList extends React.Component {
     constructor(props) {
         super(props); 
+        this.state = { 
+            editCard : null 
+        }
         this._itemHandler = this._itemHandler.bind(this);
     }    
 
@@ -17,20 +20,32 @@ export default class CardList extends React.Component {
 
         return (
             <div>
+                { this._renderList() }
+                { this._renderEditor() }
+                { this._renderModal()}
+            </div>
+        ); 
+
+    }
+
+    _renderModal(){
+
+    }
+    _renderEditor(){
+        if( this.state.editCard !== null)
+            return (<CardEditor ref={(ref) => this.cardEditor = ref} card={this.state.editCard} />);
+    } 
+    _renderList(){
+        if( this.state.editCard === null)
+            return ( 
                 <List title="Cards" type="Card" className="obj-list obj-list-block cards greedy"
                     items={this.props.cards}
                     itemHandler={this._itemHandler}
                     buildItem={ (props) => this._buildCard(props)}
                     multiSelect={true}
                 />
-
-                <CardModal ref={(ref) => this.dlgAddEditCard = ref} 
-                    onSave={card => this._onSaveCard(card)}/>
-            </div>
-        ); 
-
+            );
     }
-
     _buildCard(props) {
         return ( <Card {...props} showControls={this.props.showControls} onDoubleClick={(e) => this._itemHandler('edit', props.item, props.id)}/> );
     }
@@ -53,9 +68,10 @@ export default class CardList extends React.Component {
     _itemHandler(command, item, id){
         switch(command) {
             case 'edit' : 
-                let card = Object.assign(new rpCard(), item);          
-                this.dlgAddEditCard.setCard(card, true);
-                this.dlgAddEditCard.show(); 
+                let card = Object.assign(new rpCard(), item);   
+                this.setState({editCard: card});       
+                // this.dlgAddEditCard.setCard(card, true);
+                // this.dlgAddEditCard.show(); 
                 break; 
             case 'delete' :
             case 'trash' : 

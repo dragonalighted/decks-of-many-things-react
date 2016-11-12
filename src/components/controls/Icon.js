@@ -1,7 +1,7 @@
 
 
 import React from 'react'; 
-import { rpIconFactory, rpLocalIcon, rpRemoteIcon, rpIcon} from '../objects/rpIcon';
+import { rpIconFactory, rpLocalIcon, rpRemoteIcon, rpIcon} from '../../objects/rpIcon';
 
 export default class Icon extends React.Component {
 

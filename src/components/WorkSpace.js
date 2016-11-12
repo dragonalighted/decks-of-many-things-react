@@ -1,6 +1,6 @@
 import React from 'react'; 
 import DeckList from './DeckList';
-import CardList from './CardList';
+import CardList from './card/CardList';
 import rpDeck from '../objects/rpDeck';
 import AppObject from '../objects/AppObject';
 

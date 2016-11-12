@@ -1,10 +1,10 @@
 import React from 'react'; 
-import rpCard from '../objects/rpCard';
-import rpIcons from '../objects/rpIcon';
-import Icon from './Icon';
-import CardComponent from './CardComponent';
+import rpCard from '../../objects/rpCard';
+import rpIcons from '../../objects/rpIcon';
+import Icon from '../Icon';
+import CardComponent from '../CardComponent';
 import marked from 'marked';
-import ControlButton from './ControlButton'; 
+import ControlButton from '../ControlButton'; 
 
 
 let renderer = new marked.Renderer();

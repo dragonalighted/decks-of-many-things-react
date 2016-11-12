@@ -9,7 +9,7 @@ import IconControl from '../forms/IconControl';
 import ColorsControl from '../forms/ColorsControl'; 
 import CardContentsControl from '../forms/CardContentsControl';
 import Card from '../Card';
-
+import MessageDisplay from '../forms/MessageDisplay'; 
 // For todays date;
 Date.prototype.today = function () { 
     return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
@@ -20,6 +20,20 @@ Date.prototype.timeNow = function () {
      return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
 }
 
+
+
+class CardStructureEditor extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render(){
+        return (
+            <div></div>
+        );
+    }
+
+}
 export default class CardModal extends React.Component{
     constructor(props){
         super(props);
@@ -33,19 +47,20 @@ export default class CardModal extends React.Component{
         this._onCardContentsChanged = this._onCardContentsChanged.bind(this);
         this._onChange = this._onChange.bind(this); 
     }    
+
+
     setCard(card = new rpCard(), clearMessages = false) { 
         card = Object.assign(new rpCard(), card);  
         this.setState({card});
-        if(clearMessages) this.clearMessages();
+        if(clearMessages && this.msgBox) { this.msgBox.messages = null;}
     }
-    clearMessages(){ this.setState({messages: new messageGroup({})}); }
+    clearMessages(){  this.msgBox.messages = null; }
     show(){ this.modal.show(); }
     hide(){ this.modal.hide(); }
 
     initialState(){
         return {
             card : new rpCard(),
-            messages: new messageGroup({})
         };
     }
 
@@ -65,8 +80,9 @@ export default class CardModal extends React.Component{
                         <h2 >{this.card.id <= 0 ? "New Card" : 'Edit Card'}</h2>
                     </div>
                     <div className="col-md-12">
-                    {this._getErrors()}
-                    {this._getSuccess()}
+                    <MessageDisplay
+                        ref={(ref) => this.msgBox = ref} 
+                        messages={this.messages} />
                     </div>
                     <div className="col-md-3">
                         <Form   horizontal={true} 
@@ -152,31 +168,6 @@ export default class CardModal extends React.Component{
     }
     _onShow(){ this.cardName.focus(); }
 
-    _getErrors(){
-
-        if(this.state.messages.errors != null && this.state.messages.errors.length > 0) {
-            return (
-                <div className="alert alert-danger">
-                    <ul>
-                    {this.state.messages.errors.map(function(value, index){return (<li>{value}</li>)})}                  
-                    </ul>
-                </div>
-            );
-        }        
-    }
-
-    _getSuccess() {
-        if(this.state.messages.success != null && this.state.messages.success.length > 0  ) {
-            return (
-                <div className="alert alert-success">
-                    <ul>
-                        {this.state.messages.success.map(function(value, index){return (<li>{value}</li>)})}                  
-                    </ul>
-                </div>
-            );
-        }
-    }
-
     _onCardContentsChanged(contents) {
         console.log(`contents: ${contents}`);
         this.card.components = contents;
@@ -193,6 +184,7 @@ export default class CardModal extends React.Component{
         event.preventDefault();
         event.stopPropagation(); 
         let msgs = new messageGroup({}); 
+
         if(!this.cardName.value || this.cardName.value.trim() === "")
         {   
             msgs.errors.push('A Card name must be provided!');
@@ -207,6 +199,6 @@ export default class CardModal extends React.Component{
             }
         }
 
-        this.setState({messages: msgs});
+        this.msgBox.messages = msgs; 
     }
 }
